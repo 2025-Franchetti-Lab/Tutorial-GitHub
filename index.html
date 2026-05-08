@@ -197,41 +197,58 @@
       color: var(--gray-500);
     }
 
-    .card-video video {
+    .card-video .video-preview {
+      position: relative;
+      cursor: pointer;
+      background: #000;
+      line-height: 0;
+    }
+    .card-video .video-preview video {
       width: 100%;
       display: block;
-      background: #000;
       max-height: 280px;
       object-fit: contain;
+      pointer-events: none;
+    }
+    .card-video .play-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, .25);
+      transition: background .2s;
+    }
+    .card-video .video-preview:hover .play-overlay {
+      background: rgba(0, 0, 0, .42);
+    }
+    .card-video .play-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 60px; height: 60px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .92);
+      box-shadow: 0 2px 12px rgba(0,0,0,.35);
+      transition: transform .2s, background .2s;
+    }
+    .card-video .video-preview:hover .play-btn {
+      transform: scale(1.1);
+      background: #fff;
+    }
+    .card-video .play-btn svg {
+      margin-left: 4px;
     }
 
     .card-video .video-footer {
       padding: 0.6rem 1.2rem;
       background: var(--gray-50);
       border-top: 1px solid var(--gray-100);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
     }
     .card-video .video-footer span {
       font-size: 0.78rem;
       color: var(--gray-500);
     }
-    .card-video .btn-download {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 0.78rem;
-      font-weight: 600;
-      color: var(--brand);
-      text-decoration: none;
-      padding: 0.25rem 0.7rem;
-      border: 1px solid var(--brand-light);
-      border-radius: 6px;
-      background: var(--brand-light);
-      transition: background .15s;
-    }
-    .card-video .btn-download:hover { background: #bcd5fb; }
 
     /* ── Empty state ── */
     .empty {
@@ -375,19 +392,20 @@
               <div class="video-desc">${f.file}</div>
             </div>
           </div>
-          <video controls preload="metadata">
-            <source src="${f.file}" type="video/mp4" />
-            Il tuo browser non supporta la riproduzione video.
-          </video>
+          <div class="video-preview" onclick="window.open('${f.file}', '_blank')">
+            <video preload="metadata">
+              <source src="${f.file}" type="video/mp4" />
+            </video>
+            <div class="play-overlay">
+              <div class="play-btn">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="#bc4c00">
+                  <polygon points="5 3 19 12 5 21 5 3"/>
+                </svg>
+              </div>
+            </div>
+          </div>
           <div class="video-footer">
             <span>${f.desc}</span>
-            <a class="btn-download" href="${f.file}" download>
-              <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
-                <path d="M7.47 10.78a.75.75 0 0 0 1.06 0l3.75-3.75a.75.75 0 0 0-1.06-1.06L8.75 8.44V1.75a.75.75 0 0 0-1.5 0v6.69L4.78 5.97a.75.75 0 0 0-1.06 1.06l3.75 3.75Z"/>
-                <path d="M3.75 13a.75.75 0 0 0 0 1.5h8.5a.75.75 0 0 0 0-1.5h-8.5Z"/>
-              </svg>
-              Scarica
-            </a>
           </div>
         </div>
       `);
