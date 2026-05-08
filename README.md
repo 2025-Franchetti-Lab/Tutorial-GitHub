@@ -1,6 +1,6 @@
 # Tutorial GitHub
 
-Materiale didattico per l'introduzione alla piattaforma GitHub, destinato agli studenti del primo anno del corso di informatica (TEPSIT).
+Materiale didattico per l'introduzione alla piattaforma GitHub, destinato agli studenti del terzo anno del corso di informatica (TEPSIT).
 
 ## Contenuto
 
