@@ -250,6 +250,65 @@
       color: var(--gray-500);
     }
 
+    /* ── Exercise Card ── */
+    .card-exercise a {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1.3rem 1.4rem;
+      text-decoration: none;
+      color: inherit;
+    }
+    .card-exercise .icon-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px; height: 48px;
+      background: #e6f7f7;
+      border-radius: 8px;
+      flex-shrink: 0;
+    }
+    .card-exercise .icon-wrap svg { width: 26px; height: 26px; }
+    .card-exercise .info { flex: 1; min-width: 0; }
+    .card-exercise .filename {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #0a7073;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .card-exercise .desc {
+      font-size: 0.82rem;
+      color: var(--gray-500);
+      margin-top: 0.15rem;
+    }
+    .card-exercise .arrow {
+      color: var(--gray-200);
+      font-size: 1.1rem;
+      transition: color .2s, transform .2s;
+    }
+    .card-exercise:hover .arrow {
+      color: #0a7073;
+      transform: translateX(3px);
+    }
+    .card:hover { border-color: #9ecbff; }
+    .card-exercise:hover { border-color: #5fbfc2 !important; }
+
+    .ex-badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: .1rem .5rem;
+      border-radius: 10px;
+      background: #e6f7f7;
+      color: #0a7073;
+      border: 1px solid #5fbfc2;
+      margin-left: 0.4rem;
+      vertical-align: middle;
+      letter-spacing: 0.04em;
+    }
+
     /* ── Empty state ── */
     .empty {
       text-align: center;
@@ -306,6 +365,16 @@
     <!-- populated by JS -->
   </div>
 
+  <!-- ── Esercizi ── -->
+  <div class="section-title">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M2.75 1.5a.25.25 0 0 0-.25.25v11.5c0 .138.112.25.25.25h10.5a.25.25 0 0 0 .25-.25V4.664a.25.25 0 0 0-.073-.177l-2.914-2.914a.25.25 0 0 0-.177-.073H2.75ZM1 1.75C1 .784 1.784 0 2.75 0h7.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0 1 13.25 16H2.75A1.75 1.75 0 0 1 1 14.25Zm5.5 6.25a.75.75 0 0 1 .75-.75h1a.75.75 0 0 1 0 1.5h-1a.75.75 0 0 1-.75-.75Zm-2 2.5a.75.75 0 0 1 .75-.75h5a.75.75 0 0 1 0 1.5h-5a.75.75 0 0 1-.75-.75ZM4 6a.75.75 0 0 1 .75-.75h6.5a.75.75 0 0 1 0 1.5h-6.5A.75.75 0 0 1 4 6Z"/></svg>
+    Esercizi di verifica
+  </div>
+
+  <div class="cards" id="exercise-cards">
+    <!-- populated by JS -->
+  </div>
+
   <!-- ── Video ── -->
   <div class="section-title">
     <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M0 3.75A.75.75 0 0 1 .75 3h14.5a.75.75 0 0 1 0 1.5H.75A.75.75 0 0 1 0 3.75ZM6.5 6.75A.75.75 0 0 1 7.25 6h1.5a.75.75 0 0 1 0 1.5h-1.5A.75.75 0 0 1 6.5 6.75ZM.75 9h14.5a.75.75 0 0 1 0 1.5H.75a.75.75 0 0 1 0-1.5Z"/></svg>
@@ -335,6 +404,15 @@
       file: "Team_su_GitHub.html",
       title: "Collaboratori, Branch e Fork",
       desc:  "Gestione collaboratori, strategie di branching, fork per contribuire vs fork personale — pro, contro e casi d'uso"
+    }
+  ];
+
+  const exerciseFiles = [
+    {
+      file: "Esercizio_Team_su_GitHub.html",
+      title: "Verifica — Team su GitHub",
+      desc:  "10 domande su collaboratori, branch e fork + esercizio pratico con GitHub Web e GitHub Desktop",
+      ref:   "Team_su_GitHub.html"
     }
   ];
 
@@ -372,6 +450,38 @@
             </div>
             <div class="info">
               <div class="filename">${f.title}</div>
+              <div class="desc">${f.file} &nbsp;·&nbsp; ${f.desc}</div>
+            </div>
+            <span class="arrow">›</span>
+          </a>
+        </div>
+      `);
+    });
+  }
+
+  // ── Render Exercise cards ────────────────────────────────────────
+  const exerciseContainer = document.getElementById("exercise-cards");
+
+  if (exerciseFiles.length === 0) {
+    exerciseContainer.innerHTML = '<div class="empty">Nessun esercizio disponibile.</div>';
+  } else {
+    exerciseFiles.forEach(f => {
+      exerciseContainer.insertAdjacentHTML("beforeend", `
+        <div class="card card-exercise">
+          <a href="${f.file}" target="_blank">
+            <div class="icon-wrap">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#0a7073" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <polyline points="9 13 12 16 15 13"/>
+                <line x1="12" y1="8" x2="12" y2="16"/>
+              </svg>
+            </div>
+            <div class="info">
+              <div class="filename">
+                ${f.title}
+                <span class="ex-badge">VERIFICA</span>
+              </div>
               <div class="desc">${f.file} &nbsp;·&nbsp; ${f.desc}</div>
             </div>
             <span class="arrow">›</span>

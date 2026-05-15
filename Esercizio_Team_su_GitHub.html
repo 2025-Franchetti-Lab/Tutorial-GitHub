@@ -1,0 +1,1709 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Esercizio — Team su GitHub</title>
+  <style>
+    /* ─── Reset & Base ─────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --brand:       #0969da;
+      --brand-dark:  #0550ae;
+      --brand-light: #dbeafe;
+      --green:       #1a7f37;
+      --green-bg:    #dcfce7;
+      --green-dark:  #116329;
+      --purple:      #8250df;
+      --purple-bg:   #f3eeff;
+      --purple-dark: #6639ba;
+      --orange:      #bc4c00;
+      --orange-bg:   #fff8f0;
+      --orange-dark: #953800;
+      --red:         #cf222e;
+      --red-bg:      #fff0f0;
+      --teal:        #0a7073;
+      --teal-bg:     #e6f7f7;
+      --gray-50:     #f6f8fa;
+      --gray-100:    #eaeef2;
+      --gray-200:    #d0d7de;
+      --gray-400:    #8c959f;
+      --gray-500:    #6e7781;
+      --gray-700:    #424a53;
+      --gray-900:    #24292f;
+      --sidebar-w:   272px;
+      --radius:      8px;
+      --shadow:      0 1px 3px rgba(0,0,0,.12), 0 1px 2px rgba(0,0,0,.08);
+      --shadow-md:   0 4px 12px rgba(0,0,0,.10);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--gray-900);
+      background: #fff;
+      display: flex;
+    }
+
+    /* ─── Sidebar ────────────────────────────────────────────────── */
+    #sidebar {
+      position: fixed;
+      top: 0; left: 0;
+      width: var(--sidebar-w);
+      height: 100vh;
+      background: var(--gray-50);
+      border-right: 1px solid var(--gray-200);
+      overflow-y: auto;
+      padding: 0 0 2rem;
+      z-index: 100;
+    }
+
+    #sidebar .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 1.2rem 1.4rem;
+      border-bottom: 1px solid var(--gray-200);
+      background: var(--gray-900);
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.95rem;
+      letter-spacing: 0.01em;
+      text-decoration: none;
+    }
+    #sidebar .logo svg { flex-shrink: 0; }
+
+    #sidebar nav { padding: 1rem 0; }
+
+    #sidebar .nav-section {
+      padding: 0.4rem 1.4rem 0.2rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--gray-500);
+      margin-top: 0.8rem;
+    }
+
+    #sidebar a.nav-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0.45rem 1.4rem;
+      font-size: 0.88rem;
+      color: var(--gray-700);
+      text-decoration: none;
+      border-left: 3px solid transparent;
+      transition: background .15s, color .15s, border-color .15s;
+    }
+    #sidebar a.nav-link:hover { background: var(--gray-100); color: var(--brand); }
+    #sidebar a.nav-link.active-spy {
+      background: var(--brand-light);
+      color: var(--brand);
+      border-left-color: var(--brand);
+      font-weight: 600;
+    }
+    #sidebar .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .dot-blue   { background: var(--brand); }
+    .dot-green  { background: var(--green); }
+    .dot-purple { background: var(--purple); }
+    .dot-orange { background: var(--orange); }
+    .dot-teal   { background: var(--teal); }
+    .dot-red    { background: var(--red); }
+
+    /* ─── Score badge nella sidebar ──────────────────────────────── */
+    .score-badge {
+      margin: 1.2rem 1.4rem 0;
+      background: var(--gray-100);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius);
+      padding: 0.7rem 1rem;
+      font-size: 0.82rem;
+      color: var(--gray-700);
+    }
+    .score-badge .score-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--gray-500); margin-bottom: .3rem; }
+    .score-badge .score-value { font-size: 1.4rem; font-weight: 700; color: var(--gray-900); }
+    .score-badge .score-sub   { font-size: 0.75rem; color: var(--gray-500); }
+
+    /* ─── Main Content ───────────────────────────────────────────── */
+    main {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      min-height: 100vh;
+    }
+
+    /* ─── Hero ───────────────────────────────────────────────────── */
+    .hero {
+      background: linear-gradient(135deg, #0d1117 0%, #161b22 60%, #21262d 100%);
+      color: #e6edf3;
+      padding: 3.5rem 4rem 3rem;
+      border-bottom: 1px solid var(--gray-200);
+    }
+    .hero .badge {
+      display: inline-block;
+      background: rgba(56,139,253,.15);
+      border: 1px solid rgba(56,139,253,.4);
+      color: #58a6ff;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: .25rem .75rem;
+      border-radius: 20px;
+      margin-bottom: 1rem;
+      letter-spacing: 0.05em;
+    }
+    .hero h1 { font-size: 2.2rem; font-weight: 700; margin-bottom: 0.5rem; line-height: 1.2; }
+    .hero p { font-size: 1.05rem; color: #8b949e; max-width: 620px; }
+    .hero .meta {
+      margin-top: 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.2rem;
+      font-size: 0.82rem;
+      color: #6e7781;
+    }
+    .hero .meta span { display: flex; align-items: center; gap: 5px; }
+
+    /* ─── Sections ───────────────────────────────────────────────── */
+    .section {
+      padding: 3rem 4rem;
+      border-bottom: 1px solid var(--gray-100);
+      scroll-margin-top: 20px;
+    }
+    .section:last-child { border-bottom: none; }
+
+    .section-collab  { border-left: 4px solid var(--brand); }
+    .section-branch  { border-left: 4px solid var(--green); }
+    .section-fork    { border-left: 4px solid var(--purple); }
+    .section-pratica { border-left: 4px solid var(--orange); }
+    .section-summary { border-left: 4px solid var(--teal); }
+
+    h2 {
+      font-size: 1.7rem;
+      font-weight: 700;
+      color: var(--gray-900);
+      margin-bottom: 0.3rem;
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+    }
+    h2 .num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      font-size: 0.85rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      color: #fff;
+    }
+    .num-blue   { background: var(--brand); }
+    .num-green  { background: var(--green); }
+    .num-purple { background: var(--purple); }
+    .num-orange { background: var(--orange); }
+    .num-teal   { background: var(--teal); }
+
+    h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--gray-900);
+      margin: 2rem 0 0.6rem;
+    }
+    h3:first-child { margin-top: 0; }
+
+    h4 {
+      font-size: 0.97rem;
+      font-weight: 700;
+      color: var(--gray-900);
+      margin-bottom: 0.3rem;
+    }
+
+    p { margin-bottom: 0.9rem; color: var(--gray-700); }
+    p:last-child { margin-bottom: 0; }
+
+    .section-intro {
+      border-bottom: 2px solid var(--gray-100);
+      padding-bottom: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    /* ─── Callout boxes ──────────────────────────────────────────── */
+    .callout {
+      border-radius: var(--radius);
+      padding: 1rem 1.2rem;
+      margin: 1.2rem 0;
+      font-size: 0.9rem;
+      display: flex;
+      gap: 0.8rem;
+      align-items: flex-start;
+      border: 1px solid;
+    }
+    .callout-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+    .callout-body { flex: 1; }
+    .callout-body p { font-size: 0.88rem; margin: 0; color: var(--gray-700); }
+    .callout-body strong { display: block; font-size: 0.88rem; margin-bottom: 0.2rem; }
+
+    .callout-info   { background: var(--brand-light); border-color: #93c5fd; }
+    .callout-tip    { background: var(--green-bg);    border-color: #86efac; }
+    .callout-warn   { background: var(--orange-bg);   border-color: #fdba74; }
+    .callout-purple { background: var(--purple-bg);   border-color: #c4b5fd; }
+
+    /* ─── Diagram wrapper ────────────────────────────────────────── */
+    .diagram-wrapper {
+      background: var(--gray-50);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius);
+      padding: 1.5rem 1rem;
+      margin: 1.5rem 0;
+      text-align: center;
+      overflow-x: auto;
+    }
+    .diagram-wrapper figcaption {
+      margin-top: 0.75rem;
+      font-size: 0.82rem;
+      color: var(--gray-500);
+      font-style: italic;
+    }
+
+    /* ─── QUIZ ───────────────────────────────────────────────────── */
+    .quiz-block {
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius);
+      margin: 1.5rem 0;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .quiz-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.9rem 1.2rem;
+      background: var(--gray-50);
+      border-bottom: 1px solid var(--gray-200);
+    }
+    .quiz-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 26px; height: 26px;
+      border-radius: 50%;
+      background: var(--brand);
+      color: #fff;
+      font-size: 0.78rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .quiz-num.green  { background: var(--green); }
+    .quiz-num.purple { background: var(--purple); }
+    .quiz-num.orange { background: var(--orange); }
+
+    .quiz-question {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--gray-900);
+      flex: 1;
+    }
+    .quiz-points {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--gray-500);
+      background: var(--gray-100);
+      border: 1px solid var(--gray-200);
+      border-radius: 12px;
+      padding: .15rem .6rem;
+      flex-shrink: 0;
+    }
+
+    .quiz-body {
+      padding: 1.2rem 1.4rem;
+    }
+
+    /* Opzioni scelta multipla */
+    .options-list {
+      list-style: none;
+      padding: 0; margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .option-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.65rem 1rem;
+      border: 2px solid var(--gray-200);
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: border-color .15s, background .15s;
+      user-select: none;
+    }
+    .option-item:hover { border-color: var(--brand); background: var(--brand-light); }
+    .option-item input[type="radio"],
+    .option-item input[type="checkbox"] {
+      accent-color: var(--brand);
+      width: 16px; height: 16px;
+      flex-shrink: 0;
+    }
+    .option-item .opt-label { font-size: 0.9rem; color: var(--gray-700); }
+
+    /* Stato dopo verifica */
+    .option-item.correct   { border-color: var(--green);  background: var(--green-bg);  }
+    .option-item.wrong     { border-color: var(--red);    background: var(--red-bg);    }
+    .option-item.missed    { border-color: var(--orange); background: var(--orange-bg); }
+    .option-item.correct .opt-label { color: var(--green-dark); font-weight: 600; }
+    .option-item.wrong    .opt-label { color: var(--red); }
+    .option-item.missed   .opt-label { color: var(--orange-dark); }
+
+    /* Input fill-in */
+    .fill-input {
+      width: 100%;
+      padding: .55rem .9rem;
+      border: 2px solid var(--gray-200);
+      border-radius: var(--radius);
+      font-size: 0.9rem;
+      color: var(--gray-900);
+      outline: none;
+      transition: border-color .15s;
+      font-family: inherit;
+    }
+    .fill-input:focus { border-color: var(--brand); }
+    .fill-input.correct { border-color: var(--green);  background: var(--green-bg); }
+    .fill-input.wrong   { border-color: var(--red);    background: var(--red-bg); }
+
+    /* Sequenza ordine passi */
+    .sortable-list {
+      list-style: none;
+      padding: 0; margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+    .sort-item {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      padding: 0.6rem 1rem;
+      border: 2px solid var(--gray-200);
+      border-radius: var(--radius);
+      background: #fff;
+      cursor: grab;
+      transition: box-shadow .15s, border-color .15s;
+      user-select: none;
+    }
+    .sort-item:active { cursor: grabbing; }
+    .sort-item.dragging { opacity: 0.45; box-shadow: var(--shadow-md); }
+    .sort-item.drag-over { border-color: var(--brand); background: var(--brand-light); }
+    .sort-item .drag-handle { color: var(--gray-400); font-size: 0.85rem; flex-shrink: 0; }
+    .sort-item .sort-label { font-size: 0.88rem; color: var(--gray-700); flex: 1; }
+    .sort-item.correct { border-color: var(--green); background: var(--green-bg); }
+    .sort-item.wrong   { border-color: var(--red);   background: var(--red-bg); }
+
+    /* Feedback esito domanda */
+    .quiz-feedback {
+      display: none;
+      margin-top: 1rem;
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius);
+      font-size: 0.88rem;
+      border: 1px solid;
+    }
+    .quiz-feedback.show { display: block; }
+    .quiz-feedback.ok  { background: var(--green-bg);  border-color: #86efac; color: var(--green-dark); }
+    .quiz-feedback.err { background: var(--red-bg);    border-color: #fca5a5; color: var(--red); }
+    .quiz-feedback p   { margin: 0; color: inherit; font-size: 0.88rem; }
+
+    /* Verifica btn */
+    .btn-check {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 1rem;
+      padding: .5rem 1.1rem;
+      background: var(--brand);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius);
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .15s;
+    }
+    .btn-check:hover { background: var(--brand-dark); }
+    .btn-check:disabled { background: var(--gray-400); cursor: not-allowed; }
+
+    /* ─── Esercizio Pratico ──────────────────────────────────────── */
+    .task-card {
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius);
+      margin: 1.2rem 0;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    .task-card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      padding: 0.85rem 1.2rem;
+      background: var(--gray-50);
+      border-bottom: 1px solid var(--gray-200);
+    }
+    .task-icon { font-size: 1.2rem; }
+    .task-title { font-weight: 700; font-size: 0.95rem; color: var(--gray-900); flex: 1; }
+    .task-diff {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: .15rem .55rem;
+      border-radius: 12px;
+    }
+    .diff-easy { background: var(--green-bg);  color: var(--green-dark); }
+    .diff-med  { background: var(--orange-bg); color: var(--orange-dark); }
+    .diff-hard { background: var(--red-bg);    color: var(--red); }
+
+    .task-card-body { padding: 1.2rem 1.4rem; }
+    .task-card-body p { font-size: 0.9rem; }
+
+    .steps { margin: 1.2rem 0; }
+    .step {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      align-items: flex-start;
+    }
+    .step-num {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 30px; height: 30px;
+      background: var(--brand);
+      color: #fff;
+      border-radius: 50%;
+      font-size: 0.82rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 3px;
+    }
+    .step-num.green  { background: var(--green); }
+    .step-num.purple { background: var(--purple); }
+    .step-num.orange { background: var(--orange); }
+
+    .step-body h4 { font-size: 0.93rem; font-weight: 700; margin-bottom: 0.15rem; }
+    .step-body p  { font-size: 0.86rem; color: var(--gray-700); margin: 0; }
+
+    /* gh account chip */
+    .gh-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: var(--gray-900);
+      color: #e6edf3;
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: .2rem .65rem;
+      border-radius: 20px;
+      font-family: "SFMono-Regular", Consolas, monospace;
+      vertical-align: middle;
+    }
+
+    /* ─── Riepilogo punteggio ────────────────────────────────────── */
+    .results-box {
+      background: var(--gray-50);
+      border: 2px solid var(--gray-200);
+      border-radius: var(--radius);
+      padding: 2rem;
+      text-align: center;
+      margin-top: 1.5rem;
+    }
+    .results-box .score-big {
+      font-size: 3.5rem;
+      font-weight: 700;
+      color: var(--gray-900);
+      line-height: 1;
+    }
+    .results-box .score-big span { font-size: 1.5rem; color: var(--gray-500); }
+    .results-box .score-msg { margin-top: 0.6rem; font-size: 1rem; color: var(--gray-700); }
+    .results-box .score-bar-wrap {
+      width: 100%;
+      max-width: 360px;
+      height: 12px;
+      background: var(--gray-200);
+      border-radius: 6px;
+      margin: 1rem auto 0;
+      overflow: hidden;
+    }
+    .results-box .score-bar {
+      height: 100%;
+      border-radius: 6px;
+      background: var(--green);
+      transition: width .8s ease;
+    }
+
+    .btn-reset {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 1.4rem;
+      padding: .6rem 1.4rem;
+      background: var(--gray-900);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius);
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .15s;
+    }
+    .btn-reset:hover { background: var(--brand-dark); }
+
+    .btn-submit-all {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 1rem;
+      padding: .65rem 1.6rem;
+      background: var(--green);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius);
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .15s;
+    }
+    .btn-submit-all:hover { background: var(--green-dark); }
+
+    /* ─── Consegna link ─────────────────────────────────────────── */
+    .consegna-box {
+      border: 2px dashed var(--teal);
+      border-radius: var(--radius);
+      background: var(--teal-bg);
+      padding: 1.5rem 1.8rem;
+      margin-top: 2rem;
+    }
+    .consegna-box h3 {
+      color: var(--teal);
+      margin-top: 0;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      font-size: 1.05rem;
+    }
+    .consegna-box p { font-size: 0.9rem; }
+    .consegna-row {
+      display: flex;
+      gap: 0.6rem;
+      align-items: center;
+      margin-top: 0.6rem;
+    }
+    .consegna-input {
+      flex: 1;
+      padding: .55rem .9rem;
+      border: 2px solid var(--gray-200);
+      border-radius: var(--radius);
+      font-size: 0.9rem;
+      color: var(--gray-900);
+      outline: none;
+      font-family: "SFMono-Regular", Consolas, monospace;
+      transition: border-color .15s;
+    }
+    .consegna-input:focus { border-color: var(--teal); }
+    .consegna-input.saved { border-color: var(--green); background: var(--green-bg); }
+    .btn-consegna {
+      padding: .55rem 1.1rem;
+      background: var(--teal);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius);
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background .15s;
+    }
+    .btn-consegna:hover { background: var(--teal-dark, #085e61); }
+    .consegna-confirm {
+      display: none;
+      margin-top: 0.7rem;
+      font-size: 0.85rem;
+      color: var(--green-dark);
+      font-weight: 600;
+    }
+    .consegna-confirm.show { display: block; }
+
+    /* ─── GitHub Desktop task ────────────────────────────────────── */
+    .desk-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: .2rem .65rem;
+      border-radius: 20px;
+      margin-bottom: 1rem;
+      letter-spacing: 0.04em;
+      background: #fff3e0;
+      color: #7c4700;
+      border: 1px solid #fdba74;
+    }
+    .ui-path {
+      display: inline-flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.84rem;
+      color: var(--gray-700);
+      margin: 0.35rem 0 0.2rem;
+    }
+    .ui-btn {
+      background: #fff;
+      border: 1px solid var(--gray-200);
+      border-radius: 5px;
+      padding: .15rem .5rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--gray-900);
+      box-shadow: 0 1px 2px rgba(0,0,0,.08);
+    }
+    .ui-sep { color: var(--gray-400); font-size: 0.78rem; }
+
+    code {
+      background: var(--gray-100);
+      padding: .1rem .35rem;
+      border-radius: 4px;
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-size: 0.85em;
+      color: var(--gray-900);
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SIDEBAR
+════════════════════════════════════════════════════════════════ -->
+<aside id="sidebar">
+  <a class="logo" href="index.html">
+    <svg height="22" viewBox="0 0 16 16" fill="white" xmlns="http://www.w3.org/2000/svg">
+      <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38
+               0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13
+               -.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87
+               2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95
+               0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12
+               0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27
+               1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82
+               2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48
+               0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0
+               0016 8c0-4.42-3.58-8-8-8z"/>
+    </svg>
+    Tutorial GitHub
+  </a>
+
+  <nav>
+    <div class="nav-section">Esercizio</div>
+    <a class="nav-link" href="#collaboratori">
+      <span class="dot dot-blue"></span> Collaboratori
+    </a>
+    <a class="nav-link" href="#branch">
+      <span class="dot dot-green"></span> Branch
+    </a>
+    <a class="nav-link" href="#fork">
+      <span class="dot dot-purple"></span> Fork
+    </a>
+    <a class="nav-link" href="#pratica">
+      <span class="dot dot-orange"></span> Esercizio Pratico
+    </a>
+    <a class="nav-link" href="#desktop">
+      <span class="dot" style="background:#e07b00"></span> GitHub Desktop
+    </a>
+    <a class="nav-link" href="#riepilogo">
+      <span class="dot dot-teal"></span> Risultati
+    </a>
+
+    <div class="score-badge" id="sidebar-score">
+      <div class="score-label">Punteggio</div>
+      <div class="score-value" id="live-score">— / 10</div>
+      <div class="score-sub">domande verificate: <span id="live-checked">0</span>/10</div>
+    </div>
+
+    <div class="nav-section" style="margin-top:1.5rem">Tutorial di riferimento</div>
+    <a class="nav-link" href="Team_su_GitHub.html">
+      <span class="dot" style="background:#8b949e"></span> Team su GitHub
+    </a>
+    <a class="nav-link" href="index.html">
+      <span class="dot" style="background:#8b949e"></span> ← Torna all'indice
+    </a>
+  </nav>
+</aside>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     MAIN
+════════════════════════════════════════════════════════════════ -->
+<main>
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="badge">CORSO TEPSIT — ANNO 3 · VERIFICA</div>
+    <h1>Esercizio: Team su GitHub</h1>
+    <p>Metti alla prova le conoscenze acquisite su collaboratori, branch e fork. Risponde alle domande e completa l'esercizio pratico guidato.</p>
+    <div class="meta">
+      <span>
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M1.5 8a6.5 6.5 0 1 1 13 0 6.5 6.5 0 0 1-13 0ZM8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0Zm.5 4.75a.75.75 0 0 0-1.5 0v3.5a.75.75 0 0 0 .471.696l2.5 1a.75.75 0 0 0 .557-1.392L8.5 7.742Z"/></svg>
+        ~20 minuti
+      </span>
+      <span>
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M0 1.75A.75.75 0 0 1 .75 1h4.253c1.227 0 2.317.59 3 1.501A3.743 3.743 0 0 1 11.006 1h4.245a.75.75 0 0 1 .75.75v10.5a.75.75 0 0 1-.75.75h-4.507a2.25 2.25 0 0 0-1.591.659l-.622.621a.75.75 0 0 1-1.06 0l-.622-.621A2.25 2.25 0 0 0 5.258 13H.75a.75.75 0 0 1-.75-.75Z"/></svg>
+        10 domande + esercizio pratico
+      </span>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════
+       SEZIONE 1 — COLLABORATORI (Quiz)
+  ═══════════════════════════════════════════════ -->
+  <div class="section section-collab" id="collaboratori">
+    <div class="section-intro">
+      <h2><span class="num num-blue">1</span> Collaboratori</h2>
+      <p>Verifica la comprensione del meccanismo dei collaboratori su GitHub: accessi, ruoli e best practice.</p>
+    </div>
+
+    <!-- D1 -->
+    <div class="quiz-block" id="q1">
+      <div class="quiz-header">
+        <span class="quiz-num">1</span>
+        <span class="quiz-question">Cosa si intende per <em>collaboratore</em> su GitHub?</span>
+        <span class="quiz-points">1 pt</span>
+      </div>
+      <div class="quiz-body">
+        <ul class="options-list" id="q1-opts">
+          <li class="option-item" data-val="a">
+            <input type="radio" name="q1" value="a"> <span class="opt-label">Un utente che ha effettuato il fork del repository</span>
+          </li>
+          <li class="option-item" data-val="b">
+            <input type="radio" name="q1" value="b"> <span class="opt-label">Un utente a cui il proprietario ha concesso accesso diretto in scrittura al repository</span>
+          </li>
+          <li class="option-item" data-val="c">
+            <input type="radio" name="q1" value="c"> <span class="opt-label">Qualsiasi utente che ha aperto una Issue sul repository</span>
+          </li>
+          <li class="option-item" data-val="d">
+            <input type="radio" name="q1" value="d"> <span class="opt-label">Un utente che ha messo una stella (⭐) al repository</span>
+          </li>
+        </ul>
+        <button class="btn-check" onclick="checkSingle('q1','b',1)">Verifica risposta</button>
+        <div class="quiz-feedback" id="q1-fb"></div>
+      </div>
+    </div>
+
+    <!-- D2 -->
+    <div class="quiz-block" id="q2">
+      <div class="quiz-header">
+        <span class="quiz-num">2</span>
+        <span class="quiz-question">Quale percorso bisogna seguire su GitHub per aggiungere un collaboratore?</span>
+        <span class="quiz-points">1 pt</span>
+      </div>
+      <div class="quiz-body">
+        <ul class="options-list" id="q2-opts">
+          <li class="option-item" data-val="a">
+            <input type="radio" name="q2" value="a"> <span class="opt-label">Profile → Developer Settings → Collaborators</span>
+          </li>
+          <li class="option-item" data-val="b">
+            <input type="radio" name="q2" value="b"> <span class="opt-label">Repository → Insights → Contributors</span>
+          </li>
+          <li class="option-item" data-val="c">
+            <input type="radio" name="q2" value="c"> <span class="opt-label">Repository → Settings → Collaborators and teams → Add people</span>
+          </li>
+          <li class="option-item" data-val="d">
+            <input type="radio" name="q2" value="d"> <span class="opt-label">Repository → Pull requests → Reviewers</span>
+          </li>
+        </ul>
+        <button class="btn-check" onclick="checkSingle('q2','c',2)">Verifica risposta</button>
+        <div class="quiz-feedback" id="q2-fb"></div>
+      </div>
+    </div>
+
+    <!-- D3 — Ordinamento passi -->
+    <div class="quiz-block" id="q3">
+      <div class="quiz-header">
+        <span class="quiz-num">3</span>
+        <span class="quiz-question">Metti in ordine corretto i passaggi per aggiungere un collaboratore (trascina i blocchi)</span>
+        <span class="quiz-points">1 pt</span>
+      </div>
+      <div class="quiz-body">
+        <ul class="sortable-list" id="sort-collab">
+          <li class="sort-item" draggable="true" data-order="3"><span class="drag-handle">⠿</span><span class="sort-label">Scegliere il livello di accesso (Read, Write, Admin…)</span></li>
+          <li class="sort-item" draggable="true" data-order="1"><span class="drag-handle">⠿</span><span class="sort-label">Aprire le impostazioni del repository (Settings)</span></li>
+          <li class="sort-item" draggable="true" data-order="4"><span class="drag-handle">⠿</span><span class="sort-label">Il collaboratore accetta l'invito via email entro 7 giorni</span></li>
+          <li class="sort-item" draggable="true" data-order="2"><span class="drag-handle">⠿</span><span class="sort-label">Cliccare su "Collaborators and teams" → "Add people" e cercare l'utente</span></li>
+        </ul>
+        <button class="btn-check" onclick="checkSort('sort-collab',[1,2,3,4],3)">Verifica ordine</button>
+        <div class="quiz-feedback" id="q3-fb"></div>
+      </div>
+    </div>
+
+    <!-- D4 — Vero/Falso ruoli -->
+    <div class="quiz-block" id="q4">
+      <div class="quiz-header">
+        <span class="quiz-num">4</span>
+        <span class="quiz-question">Quale affermazione sui ruoli di collaboratore è <strong>corretta</strong>?</span>
+        <span class="quiz-points">1 pt</span>
+      </div>
+      <div class="quiz-body">
+        <ul class="options-list" id="q4-opts">
+          <li class="option-item" data-val="a">
+            <input type="radio" name="q4" value="a"> <span class="opt-label">Esiste un unico livello di accesso per tutti i collaboratori: <em>write</em></span>
+          </li>
+          <li class="option-item" data-val="b">
+            <input type="radio" name="q4" value="b"> <span class="opt-label">Un collaboratore con ruolo <em>Admin</em> può eliminare branch protetti e modificare le impostazioni del repository</span>
+          </li>
+          <li class="option-item" data-val="c">
+            <input type="radio" name="q4" value="c"> <span class="opt-label">Il ruolo <em>Read</em> permette di fare push diretto sul branch main</span>
+          </li>
+          <li class="option-item" data-val="d">
+            <input type="radio" name="q4" value="d"> <span class="opt-label">I collaboratori non possono aprire Pull Request</span>
+          </li>
+        </ul>
+        <button class="btn-check" onclick="checkSingle('q4','b',4)">Verifica risposta</button>
+        <div class="quiz-feedback" id="q4-fb"></div>
+      </div>
+    </div>
+
+  </div><!-- /section collaboratori -->
+
+
+  <!-- ══════════════════════════════════════════════
+       SEZIONE 2 — BRANCH (Quiz)
+  ═══════════════════════════════════════════════ -->
+  <div class="section section-branch" id="branch">
+    <div class="section-intro">
+      <h2><span class="num num-green">2</span> Branch</h2>
+      <p>Domande sui branch: cosa sono, come funzionano e quando usarli.</p>
+    </div>
+
+    <!-- Diagramma branch quiz -->
+    <div class="diagram-wrapper">
+      <svg viewBox="0 0 640 200" xmlns="http://www.w3.org/2000/svg" style="max-width:600px;width:100%">
+        <defs>
+          <marker id="arrbr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#1a7f37"/>
+          </marker>
+          <marker id="arrgr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#8c959f"/>
+          </marker>
+          <marker id="arrbl" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#0969da"/>
+          </marker>
+        </defs>
+        <!-- main -->
+        <text x="10" y="78" font-size="11" font-weight="700" fill="#0550ae">main</text>
+        <circle cx="70"  cy="85" r="11" fill="#0969da"/>
+        <circle cx="150" cy="85" r="11" fill="#0969da"/>
+        <circle cx="230" cy="85" r="11" fill="#0969da"/>
+        <circle cx="530" cy="85" r="11" fill="#0969da"/>
+        <circle cx="610" cy="85" r="11" fill="#0969da"/>
+        <line x1="81"  y1="85" x2="138" y2="85" stroke="#0969da" stroke-width="2.5"/>
+        <line x1="161" y1="85" x2="218" y2="85" stroke="#0969da" stroke-width="2.5"/>
+        <line x1="241" y1="85" x2="518" y2="85" stroke="#0969da" stroke-width="2.5" stroke-dasharray="4 3"/>
+        <line x1="541" y1="85" x2="598" y2="85" stroke="#0969da" stroke-width="2.5"/>
+        <text x="63"  y="104" text-anchor="middle" font-size="9" fill="#fff">C1</text>
+        <text x="143" y="104" text-anchor="middle" font-size="9" fill="#fff">C2</text>
+        <text x="223" y="104" text-anchor="middle" font-size="9" fill="#fff">C3</text>
+        <text x="523" y="104" text-anchor="middle" font-size="9" fill="#fff">C6</text>
+        <text x="603" y="104" text-anchor="middle" font-size="9" fill="#fff">C7</text>
+        <!-- feature -->
+        <text x="10" y="155" font-size="11" font-weight="700" fill="#1a7f37">feature</text>
+        <line x1="230" y1="96" x2="285" y2="148" stroke="#1a7f37" stroke-width="2" marker-end="url(#arrbr)"/>
+        <circle cx="300" cy="155" r="11" fill="#1a7f37"/>
+        <circle cx="380" cy="155" r="11" fill="#1a7f37"/>
+        <circle cx="460" cy="155" r="11" fill="#1a7f37"/>
+        <line x1="311" y1="155" x2="368" y2="155" stroke="#1a7f37" stroke-width="2.5"/>
+        <line x1="391" y1="155" x2="448" y2="155" stroke="#1a7f37" stroke-width="2.5"/>
+        <line x1="471" y1="146" x2="518" y2="96" stroke="#8c959f" stroke-width="2" stroke-dasharray="4 3" marker-end="url(#arrgr)"/>
+        <text x="293" y="174" text-anchor="middle" font-size="9" fill="#fff">C4</text>
+        <text x="373" y="174" text-anchor="middle" font-size="9" fill="#fff">C5</text>
+        <text x="453" y="174" text-anchor="middle" font-size="9" fill="#fff">C?</text>
+        <!-- label -->
+        <text x="390" y="78" text-anchor="middle" font-size="10" fill="#6e7781" font-style="italic">sviluppo parallelo</text>
+        <text x="492" y="130" font-size="10" fill="#6e7781">merge</text>
+        <!-- ? label -->
+        <rect x="436" y="182" width="34" height="18" rx="4" fill="#fff3cd" stroke="#f0ad4e" stroke-width="1.2"/>
+        <text x="453" y="195" text-anchor="middle" font-size="9" font-weight="700" fill="#856404">???</text>
+      </svg>
+      <figcaption>Osserva il diagramma: il branch <code>feature</code> si ramifica da C3 e viene poi unito al <code>main</code>. Il commit C? è oggetto della domanda 5.</figcaption>
+    </div>
+
+    <!-- D5 -->
+    <div class="quiz-block" id="q5">
+      <div class="quiz-header">
+        <span class="quiz-num green">5</span>
+        <span class="quiz-question">Nel diagramma qui sopra, il commit <strong>C?</strong> è il terzo commit sul branch <code>feature</code>. Dopo il merge nel <code>main</code>, cosa succede al branch <code>feature</code>?</span>
+        <span class="quiz-points">1 pt</span>
+      </div>
+      <div class="quiz-body">
+        <ul class="options-list" id="q5-opts">
+          <li class="option-item" data-val="a">
+            <input type="radio" name="q5" value="a"> <span class="opt-label">Viene eliminato automaticamente da GitHub</span>
+          </li>
+          <li class="option-item" data-val="b">
+            <input type="radio" name="q5" value="b"> <span class="opt-label">Rimane disponibile; va eliminato manualmente (o cliccando "Delete branch" dopo la PR)</span>
+          </li>
+          <li class="option-item" data-val="c">
+            <input type="radio" name="q5" value="c"> <span class="opt-label">I suoi commit vengono cancellati dalla storia del repository</span>
+          </li>
+          <li class="option-item" data-val="d">
+            <input type="radio" name="q5" value="d"> <span class="opt-label">Diventa automaticamente il nuovo branch principale</span>
+          </li>
+        </ul>
+        <button class="btn-check" onclick="checkSingle('q5','b',5)">Verifica risposta</button>
+        <div class="quiz-feedback" id="q5-fb"></div>
+      </div>
+    </div>
+
+    <!-- D6 -->
+    <div class="quiz-block" id="q6">
+      <div class="quiz-header">
+        <span class="quiz-num green">6</span>
+        <span class="quiz-question">Quale affermazione descrive correttamente un branch in Git?</span>
+        <span class="quiz-points">1 pt</span>
+      </div>
+      <div class="quiz-body">
+        <ul class="options-list" id="q6-opts">
+          <li class="option-item" data-val="a">
+            <input type="radio" name="q6" value="a"> <span class="opt-label">Creare un branch duplica fisicamente tutti i file del repository</span>
+          </li>
+          <li class="option-item" data-val="b">
+            <input type="radio" name="q6" value="b"> <span class="opt-label">Un branch è un puntatore mobile a uno specifico commit; la creazione è istantanea e leggera</span>
+          </li>
+          <li class="option-item" data-val="c">
+            <input type="radio" name="q6" value="c"> <span class="opt-label">Un repository può avere al massimo 3 branch attivi contemporaneamente</span>
+          </li>
+          <li class="option-item" data-val="d">
+            <input type="radio" name="q6" value="d"> <span class="opt-label">I branch sono disponibili solo nei repository pubblici</span>
+          </li>
+        </ul>
+        <button class="btn-check" onclick="checkSingle('q6','b',6)">Verifica risposta</button>
+        <div class="quiz-feedback" id="q6-fb"></div>
+      </div>
+    </div>
+
+    <!-- D7 — Completa la frase -->
+    <div class="quiz-block" id="q7">
+      <div class="quiz-header">
+        <span class="quiz-num green">7</span>
+        <span class="quiz-question">Completa la frase: "Un branch con vita molto lunga tende ad accumulare _______ difficili da risolvere."</span>
+        <span class="quiz-points">1 pt</span>
+      </div>
+      <div class="quiz-body">
+        <input type="text" class="fill-input" id="q7-inp" placeholder="scrivi qui la risposta…">
+        <button class="btn-check" onclick="checkFill('q7',['merge conflict','merge conflicts','conflitti di merge','conflict','conflitti'],7)">Verifica risposta</button>
+        <div class="quiz-feedback" id="q7-fb"></div>
+      </div>
+    </div>
+
+  </div><!-- /section branch -->
+
+
+  <!-- ══════════════════════════════════════════════
+       SEZIONE 3 — FORK (Quiz)
+  ═══════════════════════════════════════════════ -->
+  <div class="section section-fork" id="fork">
+    <div class="section-intro">
+      <h2><span class="num num-purple">3</span> Fork</h2>
+      <p>Domande sul fork: differenze con i branch, casi d'uso e flusso contributo.</p>
+    </div>
+
+    <!-- D8 -->
+    <div class="quiz-block" id="q8">
+      <div class="quiz-header">
+        <span class="quiz-num purple">8</span>
+        <span class="quiz-question">Qual è la differenza principale tra un <em>fork</em> e un <em>branch</em>?</span>
+        <span class="quiz-points">1 pt</span>
+      </div>
+      <div class="quiz-body">
+        <ul class="options-list" id="q8-opts">
+          <li class="option-item" data-val="a">
+            <input type="radio" name="q8" value="a"> <span class="opt-label">Il fork crea una copia indipendente del repository nell'account di un altro utente; il branch è una linea di sviluppo interna allo stesso repository</span>
+          </li>
+          <li class="option-item" data-val="b">
+            <input type="radio" name="q8" value="b"> <span class="opt-label">Non c'è differenza: fork e branch sono sinonimi su GitHub</span>
+          </li>
+          <li class="option-item" data-val="c">
+            <input type="radio" name="q8" value="c"> <span class="opt-label">Il fork è disponibile solo ai collaboratori con ruolo Admin</span>
+          </li>
+          <li class="option-item" data-val="d">
+            <input type="radio" name="q8" value="d"> <span class="opt-label">Il branch crea un repository separato, il fork crea un ramo nello stesso repository</span>
+          </li>
+        </ul>
+        <button class="btn-check" onclick="checkSingle('q8','a',8)">Verifica risposta</button>
+        <div class="quiz-feedback" id="q8-fb"></div>
+      </div>
+    </div>
+
+    <!-- D9 -->
+    <div class="quiz-block" id="q9">
+      <div class="quiz-header">
+        <span class="quiz-num purple">9</span>
+        <span class="quiz-question">Quando si usa tipicamente un <em>fork</em> piuttosto che diventare collaboratore diretto?</span>
+        <span class="quiz-points">1 pt</span>
+      </div>
+      <div class="quiz-body">
+        <ul class="options-list" id="q9-opts">
+          <li class="option-item" data-val="a">
+            <input type="radio" name="q9" value="a"> <span class="opt-label">Quando si vuole contribuire a un repository open source su cui non si ha write access diretto</span>
+          </li>
+          <li class="option-item" data-val="b">
+            <input type="radio" name="q9" value="b"> <span class="opt-label">Quando si vuole correggere un bug urgente sul branch main del proprio team</span>
+          </li>
+          <li class="option-item" data-val="c">
+            <input type="radio" name="q9" value="c"> <span class="opt-label">Quando si vuole aggiungere un collaboratore al proprio repository</span>
+          </li>
+          <li class="option-item" data-val="d">
+            <input type="radio" name="q9" value="d"> <span class="opt-label">Quando si vuole proteggere il branch main con delle regole</span>
+          </li>
+        </ul>
+        <button class="btn-check" onclick="checkSingle('q9','a',9)">Verifica risposta</button>
+        <div class="quiz-feedback" id="q9-fb"></div>
+      </div>
+    </div>
+
+    <!-- D10 — Scenario -->
+    <div class="quiz-block" id="q10">
+      <div class="quiz-header">
+        <span class="quiz-num purple">10</span>
+        <span class="quiz-question">Scenario: vuoi correggere un errore nella documentazione di un progetto open source che non è tuo. Qual è il flusso corretto?</span>
+        <span class="quiz-points">1 pt</span>
+      </div>
+      <div class="quiz-body">
+        <ul class="options-list" id="q10-opts">
+          <li class="option-item" data-val="a">
+            <input type="radio" name="q10" value="a"> <span class="opt-label">Aprire una Issue → attendere che il maintainer sistemi il problema</span>
+          </li>
+          <li class="option-item" data-val="b">
+            <input type="radio" name="q10" value="b"> <span class="opt-label">Fork del repository → creare un branch nella propria copia → apportare le modifiche → aprire una Pull Request verso il repository originale</span>
+          </li>
+          <li class="option-item" data-val="c">
+            <input type="radio" name="q10" value="c"> <span class="opt-label">Clonare il repository originale → fare push direttamente sul main dell'originale</span>
+          </li>
+          <li class="option-item" data-val="d">
+            <input type="radio" name="q10" value="d"> <span class="opt-label">Contattare il proprietario via email chiedendo di aggiungere la modifica</span>
+          </li>
+        </ul>
+        <button class="btn-check" onclick="checkSingle('q10','b',10)">Verifica risposta</button>
+        <div class="quiz-feedback" id="q10-fb"></div>
+      </div>
+    </div>
+
+  </div><!-- /section fork -->
+
+
+  <!-- ══════════════════════════════════════════════
+       SEZIONE 4 — ESERCIZIO PRATICO
+  ═══════════════════════════════════════════════ -->
+  <div class="section section-pratica" id="pratica">
+    <div class="section-intro">
+      <h2><span class="num num-orange">4</span> Esercizio Pratico</h2>
+      <p>Segui le istruzioni passo dopo passo e svolgile direttamente su GitHub. Questo esercizio simula un flusso reale di collaborazione in un progetto scolastico.</p>
+    </div>
+
+    <div class="callout callout-info">
+      <div class="callout-icon">ℹ️</div>
+      <div class="callout-body">
+        <strong>Account GitHub dei collaboratori</strong>
+        <p>In questo esercizio utilizzerai i seguenti account GitHub come collaboratori del tuo repository:
+          <span class="gh-chip">
+            <svg height="13" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+            frandelfo
+          </span>
+          &nbsp;
+          <span class="gh-chip">
+            <svg height="13" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+            francescoadriani
+          </span>
+        </p>
+      </div>
+    </div>
+
+    <!-- Task A -->
+    <div class="task-card">
+      <div class="task-card-header">
+        <span class="task-icon">🏗️</span>
+        <span class="task-title">Task A — Crea il repository e aggiungi i collaboratori</span>
+        <span class="task-diff diff-easy">Facile</span>
+      </div>
+      <div class="task-card-body">
+        <p>Crea un nuovo repository pubblico chiamato <code>progetto-team</code> sul tuo account GitHub personale, poi invita entrambi i collaboratori indicati con ruolo <strong>Write</strong>.</p>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-body">
+              <h4>Crea il repository</h4>
+              <p>Vai su <strong>github.com</strong> → clicca il <strong>+</strong> in alto a destra → <em>New repository</em>. Assegna il nome <code>progetto-team</code>, impostalo come <strong>Public</strong> e spunta <em>"Add a README file"</em>. Clicca <em>Create repository</em>.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-body">
+              <h4>Aggiungi il primo collaboratore</h4>
+              <p>Dal repository appena creato vai in <em>Settings → Collaborators and teams → Add people</em>. Cerca l'utente <span class="gh-chip" style="font-size:0.76rem">frandelfo</span> e seleziona il ruolo <strong>Write</strong>.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-body">
+              <h4>Aggiungi il secondo collaboratore</h4>
+              <p>Ripeti il passo precedente cercando l'utente <span class="gh-chip" style="font-size:0.76rem">francescoadriani</span>, sempre con ruolo <strong>Write</strong>.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">4</div>
+            <div class="step-body">
+              <h4>Verifica gli inviti</h4>
+              <p>Controlla che nella sezione <em>Collaborators and teams</em> appaiano entrambi gli utenti con lo stato <em>"Invited"</em> o <em>"Active"</em> (dipende se hanno già accettato).</p>
+            </div>
+          </div>
+        </div>
+        <div class="callout callout-tip" style="margin-top:1rem">
+          <div class="callout-icon">✅</div>
+          <div class="callout-body">
+            <p><strong>Come verificare il completamento:</strong> nella pagina <em>Settings → Collaborators and teams</em> devono apparire entrambi gli account elencati sopra.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Task B -->
+    <div class="task-card">
+      <div class="task-card-header">
+        <span class="task-icon">🌿</span>
+        <span class="task-title">Task B — Crea un branch e aggiungi un file</span>
+        <span class="task-diff diff-med">Medio</span>
+      </div>
+      <div class="task-card-body">
+        <p>Senza lasciare GitHub.com (usa l'interfaccia web), crea un branch chiamato <code>sviluppo</code> a partire dal <code>main</code>, poi aggiungi un nuovo file al progetto su quel branch.</p>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num green">1</div>
+            <div class="step-body">
+              <h4>Crea il branch <code>sviluppo</code></h4>
+              <p>Nella pagina principale del repository clicca sul selettore branch (mostra <strong>main</strong> → scorciatoia). Digita <code>sviluppo</code> nel campo di ricerca e scegli <em>"Create branch: sviluppo from main"</em>.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num green">2</div>
+            <div class="step-body">
+              <h4>Crea un nuovo file sul branch <code>sviluppo</code></h4>
+              <p>Assicurati di essere sul branch <code>sviluppo</code> (il selettore in alto deve mostrare "sviluppo"). Clicca <em>Add file → Create new file</em>. Chiama il file <code>contributo.md</code> e scrivi al suo interno almeno una riga di testo, ad esempio:<br><code># Il mio contributo</code><br>Poi clicca <em>Commit changes…</em> e scegli <em>"Commit directly to the <code>sviluppo</code> branch"</em>.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num green">3</div>
+            <div class="step-body">
+              <h4>Apri una Pull Request</h4>
+              <p>GitHub mostrerà un banner giallo <em>"Compare &amp; pull request"</em>. Cliccalo. Inserisci come titolo <em>"Aggiunto file contributo"</em> e clicca <em>Create pull request</em>. <strong>Non fare ancora il merge.</strong></p>
+            </div>
+          </div>
+        </div>
+        <div class="callout callout-warn" style="margin-top:1rem">
+          <div class="callout-icon">⚠️</div>
+          <div class="callout-body">
+            <p>Non fare il merge della Pull Request prima che il docente l'abbia verificata. Il merge è l'ultima operazione da eseguire solo dopo l'approvazione.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Task C -->
+    <div class="task-card">
+      <div class="task-card-header">
+        <span class="task-icon">🔁</span>
+        <span class="task-title">Task C — Simula un fork (opzionale, livello avanzato)</span>
+        <span class="task-diff diff-hard">Avanzato</span>
+      </div>
+      <div class="task-card-body">
+        <p>Utilizza il profilo di uno dei due collaboratori (o un secondo account personale) per eseguire un fork del repository <code>progetto-team</code>, apportare una modifica e inviare una Pull Request verso il repository originale.</p>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num purple">1</div>
+            <div class="step-body">
+              <h4>Fai il fork</h4>
+              <p>Accedi con l'account <span class="gh-chip" style="font-size:0.76rem">francescoadriani</span> (o <span class="gh-chip" style="font-size:0.76rem">frandelfo</span>). Naviga fino al repository <code>progetto-team</code>. In alto a destra clicca <em>Fork → Create fork</em>.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num purple">2</div>
+            <div class="step-body">
+              <h4>Modifica il README nel fork</h4>
+              <p>Nel tuo fork, apri il file <code>README.md</code>, clicca l'icona matita ✏️ e aggiungi una riga con il nome del collaboratore. Fai il commit sul branch <code>main</code> del fork.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num purple">3</div>
+            <div class="step-body">
+              <h4>Apri una PR verso l'originale</h4>
+              <p>Nel fork comparirà il banner <em>"Contribute → Open pull request"</em>. Cliccalo, inserisci un titolo descrittivo e clicca <em>Create pull request</em>. La PR arriverà al repository <code>progetto-team</code> originale.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num purple">4</div>
+            <div class="step-body">
+              <h4>Accetta o rifiuta la PR (come owner)</h4>
+              <p>Torna al tuo account originale (proprietario del repository). Apri la Pull Request ricevuta, lascia un commento e poi decide se fare il merge o chiuderla.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Box consegna link ── -->
+    <div class="consegna-box">
+      <h3>📬 Consegna il tuo lavoro</h3>
+      <p>Al termine dei Task A, B e C copia il link al tuo repository GitHub e incollalo qui sotto, poi clicca <strong>Salva link</strong>. Consegna questo link al docente per la verifica del completamento della parte pratica.</p>
+      <p style="margin-top:.5rem;font-size:0.85rem;color:var(--gray-500);">Esempio: <code>https://github.com/tuo-username/progetto-team</code></p>
+      <div class="consegna-row">
+        <input type="url" class="consegna-input" id="link-repo"
+               placeholder="https://github.com/username/progetto-team">
+        <button class="btn-consegna" onclick="saveLink()">💾 Salva link</button>
+      </div>
+      <div class="consegna-confirm" id="link-confirm">
+        ✅ Link salvato! Mostra questa pagina al docente oppure copia il link e invialo tramite il canale indicato.
+      </div>
+    </div>
+
+  </div><!-- /section pratica -->
+
+
+  <!-- ══════════════════════════════════════════════
+       SEZIONE 5 — GITHUB DESKTOP
+  ═══════════════════════════════════════════════ -->
+  <div class="section" style="border-left:4px solid #e07b00" id="desktop">
+    <div class="section-intro">
+      <h2>
+        <span class="num" style="background:#e07b00">5</span>
+        Esercizio con GitHub Desktop
+      </h2>
+      <p>In questo esercizio utilizzerai <strong>GitHub Desktop</strong> per clonare il repository, creare un branch locale, fare modifiche e sincronizzare tutto con GitHub, senza usare il terminale né l'interfaccia web per le operazioni Git.</p>
+    </div>
+
+    <div class="callout callout-warn">
+      <div class="callout-icon">⚠️</div>
+      <div class="callout-body">
+        <strong>Prerequisito</strong>
+        <p>Assicurati di aver completato il <strong>Task A</strong> (repository <code>progetto-team</code> già creato e collaboratori aggiunti) prima di iniziare questo esercizio. GitHub Desktop deve essere installato e configurato con il tuo account GitHub.</p>
+      </div>
+    </div>
+
+    <!-- Diagramma flusso Desktop -->
+    <div class="diagram-wrapper">
+      <svg viewBox="0 0 680 140" xmlns="http://www.w3.org/2000/svg" style="max-width:640px;width:100%">
+        <defs>
+          <marker id="arr-desk" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#e07b00"/>
+          </marker>
+        </defs>
+        <!-- boxes -->
+        <rect x="10"  y="45" width="110" height="50" rx="8" fill="#fff3e0" stroke="#fdba74" stroke-width="1.8"/>
+        <text x="65"  y="66" text-anchor="middle" font-size="11" font-weight="700" fill="#7c4700">☁️ GitHub.com</text>
+        <text x="65"  y="82" text-anchor="middle" font-size="10" fill="#424a53">repo remoto</text>
+
+        <rect x="160" y="45" width="120" height="50" rx="8" fill="#fff3e0" stroke="#fdba74" stroke-width="1.8"/>
+        <text x="220" y="66" text-anchor="middle" font-size="11" font-weight="700" fill="#7c4700">🖥️ GH Desktop</text>
+        <text x="220" y="82" text-anchor="middle" font-size="10" fill="#424a53">Clone locale</text>
+
+        <rect x="330" y="45" width="120" height="50" rx="8" fill="#fff3e0" stroke="#fdba74" stroke-width="1.8"/>
+        <text x="390" y="66" text-anchor="middle" font-size="11" font-weight="700" fill="#7c4700">🌿 Branch</text>
+        <text x="390" y="82" text-anchor="middle" font-size="10" fill="#424a53">desktop-edit</text>
+
+        <rect x="500" y="45" width="170" height="50" rx="8" fill="#dcfce7" stroke="#86efac" stroke-width="1.8"/>
+        <text x="585" y="66" text-anchor="middle" font-size="11" font-weight="700" fill="#116329">☁️ Push + PR</text>
+        <text x="585" y="82" text-anchor="middle" font-size="10" fill="#424a53">su GitHub.com</text>
+
+        <!-- arrows -->
+        <line x1="121" y1="70" x2="158" y2="70" stroke="#e07b00" stroke-width="2" marker-end="url(#arr-desk)"/>
+        <text x="139" y="63" text-anchor="middle" font-size="9" fill="#6e7781">clone</text>
+
+        <line x1="281" y1="70" x2="328" y2="70" stroke="#e07b00" stroke-width="2" marker-end="url(#arr-desk)"/>
+        <text x="304" y="63" text-anchor="middle" font-size="9" fill="#6e7781">new branch</text>
+
+        <line x1="451" y1="70" x2="498" y2="70" stroke="#e07b00" stroke-width="2" marker-end="url(#arr-desk)"/>
+        <text x="474" y="63" text-anchor="middle" font-size="9" fill="#6e7781">publish</text>
+      </svg>
+      <figcaption>Flusso completo con GitHub Desktop: clone → branch locale → commit → push → Pull Request su GitHub.com.</figcaption>
+    </div>
+
+    <!-- Task D -->
+    <div class="task-card" id="task-d">
+      <div class="task-card-header">
+        <span class="task-icon">🖥️</span>
+        <span class="task-title">Task D — Clona, modifica e sincronizza con GitHub Desktop</span>
+        <span class="task-diff diff-med">Medio</span>
+      </div>
+      <div class="task-card-body">
+        <span class="desk-badge">🖥️ GitHub Desktop — app per Windows e macOS</span>
+        <p>Utilizzerai GitHub Desktop per clonare il repository <code>progetto-team</code> sul tuo computer, creare un branch chiamato <code>desktop-edit</code>, modificare un file localmente e pubblicare le modifiche su GitHub aprendo una Pull Request.</p>
+
+        <div class="steps">
+          <div class="step">
+            <div class="step-num orange">1</div>
+            <div class="step-body">
+              <h4>Clona il repository con GitHub Desktop</h4>
+              <p>Apri GitHub Desktop. Nel menu in alto scegli <em>File → Clone repository…</em>. Nella scheda <em>GitHub.com</em> cerca il repository <code>progetto-team</code> e scegli una cartella locale dove salvarlo. Clicca <em>Clone</em>.</p>
+              <div class="ui-path">
+                <span class="ui-btn">File</span>
+                <span class="ui-sep">→</span>
+                <span class="ui-btn">Clone repository…</span>
+                <span class="ui-sep">→</span>
+                <span class="ui-btn">GitHub.com</span>
+                <span class="ui-sep">→</span>
+                <span class="ui-btn">progetto-team</span>
+                <span class="ui-sep">→</span>
+                <span class="ui-btn">Clone</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-num orange">2</div>
+            <div class="step-body">
+              <h4>Crea un nuovo branch locale</h4>
+              <p>In GitHub Desktop, clicca sul menu <em>Current Branch</em> (barra in alto al centro). Si apre un pannello: clicca <em>New Branch</em>, digita il nome <code>desktop-edit</code> e clicca <em>Create Branch</em>. Ora sei sul branch <code>desktop-edit</code>.</p>
+              <div class="ui-path">
+                <span class="ui-btn">Current Branch ▾</span>
+                <span class="ui-sep">→</span>
+                <span class="ui-btn">New Branch</span>
+                <span class="ui-sep">→</span>
+                <span class="ui-btn">desktop-edit</span>
+                <span class="ui-sep">→</span>
+                <span class="ui-btn">Create Branch</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-num orange">3</div>
+            <div class="step-body">
+              <h4>Modifica un file con un editor di testo</h4>
+              <p>Clicca <em>Open in…</em> (o usa il menu <em>Repository → Open in Explorer / Show in Finder</em>) per aprire la cartella del repository. Apri il file <code>README.md</code> con Blocco Note, TextEdit o VS Code. Aggiungi in fondo una riga, ad esempio:</p>
+              <code style="display:block;margin:.5rem 0;padding:.5rem .8rem">## Modificato con GitHub Desktop</code>
+              <p>Salva il file.</p>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-num orange">4</div>
+            <div class="step-body">
+              <h4>Fai il commit con GitHub Desktop</h4>
+              <p>Torna in GitHub Desktop: nella colonna di sinistra vedrai il file <code>README.md</code> evidenziato come modificato. In basso a sinistra compila il campo <em>Summary</em> con il messaggio <code>Aggiunta sezione desktop</code>, poi clicca <em>Commit to desktop-edit</em>.</p>
+              <div class="ui-path">
+                <span class="ui-btn">Summary: "Aggiunta sezione desktop"</span>
+                <span class="ui-sep">→</span>
+                <span class="ui-btn">Commit to desktop-edit</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-num orange">5</div>
+            <div class="step-body">
+              <h4>Pubblica il branch su GitHub</h4>
+              <p>In alto comparirà il pulsante <em>Publish branch</em>. Cliccalo: GitHub Desktop invierà (push) il branch <code>desktop-edit</code> sul repository remoto.</p>
+              <div class="ui-path">
+                <span class="ui-btn">Publish branch</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-num orange">6</div>
+            <div class="step-body">
+              <h4>Apri la Pull Request su GitHub.com</h4>
+              <p>Dopo il push, GitHub Desktop mostra il pulsante <em>Create Pull Request</em>. Cliccalo: si aprirà il browser direttamente sulla pagina di creazione PR su GitHub.com. Inserisci il titolo <em>"Modifica da GitHub Desktop"</em> e clicca <em>Create pull request</em>. <strong>Non fare ancora il merge.</strong></p>
+              <div class="ui-path">
+                <span class="ui-btn">Create Pull Request</span>
+                <span class="ui-sep">→</span>
+                <span class="ui-btn">GitHub.com si apre automaticamente</span>
+                <span class="ui-sep">→</span>
+                <span class="ui-btn">Create pull request</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout callout-tip" style="margin-top:1rem">
+          <div class="callout-icon">✅</div>
+          <div class="callout-body">
+            <p><strong>Come verificare il completamento:</strong> sul repository <code>progetto-team</code> deve essere visibile una Pull Request aperta con titolo "Modifica da GitHub Desktop" proveniente dal branch <code>desktop-edit</code>.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Box consegna Desktop -->
+    <div class="consegna-box" style="margin-top:2rem">
+      <h3>📬 Consegna — Esercizio GitHub Desktop</h3>
+      <p>Copia il link diretto alla Pull Request aperta (es. <code>https://github.com/username/progetto-team/pull/2</code>) e incollalo qui sotto per consegnare anche questa parte al docente.</p>
+      <div class="consegna-row">
+        <input type="url" class="consegna-input" id="link-desktop"
+               placeholder="https://github.com/username/progetto-team/pull/…">
+        <button class="btn-consegna" onclick="saveLink2()">💾 Salva link</button>
+      </div>
+      <div class="consegna-confirm" id="link-desktop-confirm">
+        ✅ Link PR salvato! Mostra questa pagina al docente oppure invia il link tramite il canale indicato.
+      </div>
+    </div>
+
+  </div><!-- /section desktop -->
+
+
+  <!-- ══════════════════════════════════════════════
+       SEZIONE 6 — RISULTATI QUIZ
+  ═══════════════════════════════════════════════ -->
+  <div class="section section-summary" id="riepilogo">
+    <div class="section-intro">
+      <h2><span class="num num-teal">6</span> Risultati Quiz</h2>
+      <p>Quando hai risposto a tutte le 10 domande clicca il pulsante qui sotto per vedere il tuo punteggio finale.</p>
+    </div>
+
+    <div style="text-align:center">
+      <button class="btn-submit-all" onclick="showResults()">📊 Calcola punteggio finale</button>
+    </div>
+
+    <div class="results-box" id="results-box" style="display:none">
+      <div class="score-big" id="res-score">0 <span>/ 10</span></div>
+      <div class="score-msg" id="res-msg"></div>
+      <div class="score-bar-wrap">
+        <div class="score-bar" id="res-bar" style="width:0%"></div>
+      </div>
+      <button class="btn-reset" onclick="resetAll()">🔄 Ricomincia da capo</button>
+    </div>
+
+    <div class="callout callout-purple" style="margin-top:2rem">
+      <div class="callout-icon">📚</div>
+      <div class="callout-body">
+        <strong>Vuoi ripassare?</strong>
+        <p>Torna al tutorial <a href="Team_su_GitHub.html" style="color:var(--purple-dark);font-weight:600">Team su GitHub</a> per ripassare i concetti e poi ritenta l'esercizio.</p>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════════════════════════════ -->
+<script>
+  /* ── Stato globale ── */
+  const state = {
+    scores: {},   // qN -> true/false
+    locked: {}    // qN -> true quando verificata
+  };
+
+  function updateSidebarScore() {
+    const total  = Object.keys(state.scores).length;
+    const correct = Object.values(state.scores).filter(Boolean).length;
+    document.getElementById('live-score').textContent   = correct + ' / 10';
+    document.getElementById('live-checked').textContent = total;
+  }
+
+  /* ── Scelta singola ── */
+  function checkSingle(qId, correctVal, qNum) {
+    if (state.locked[qId]) return;
+    const selected = document.querySelector(`input[name="${qId}"]:checked`);
+    if (!selected) { alert('Seleziona una risposta prima di verificare.'); return; }
+
+    state.locked[qId] = true;
+    const isOk = selected.value === correctVal;
+    state.scores[qId] = isOk;
+
+    const items = document.querySelectorAll(`#${qId}-opts .option-item`);
+    items.forEach(item => {
+      const radio = item.querySelector('input[type="radio"]');
+      radio.disabled = true;
+      if (item.dataset.val === correctVal) {
+        item.classList.add('correct');
+      } else if (item.dataset.val === selected.value && !isOk) {
+        item.classList.add('wrong');
+      }
+    });
+
+    showFeedback(qId, isOk,
+      isOk ? '✅ Esatto! Risposta corretta.' : '❌ Risposta errata. La risposta corretta è evidenziata in verde.');
+
+    document.querySelector(`#${qId} .btn-check`).disabled = true;
+    updateSidebarScore();
+  }
+
+  /* ── Fill-in ── */
+  function checkFill(qId, acceptedArr, qNum) {
+    if (state.locked[qId]) return;
+    const inp = document.getElementById(`${qId}-inp`);
+    const val = inp.value.trim().toLowerCase();
+    if (!val) { alert('Scrivi una risposta prima di verificare.'); return; }
+
+    state.locked[qId] = true;
+    const isOk = acceptedArr.some(a => val.includes(a.toLowerCase()));
+    state.scores[qId] = isOk;
+
+    inp.disabled = true;
+    inp.classList.add(isOk ? 'correct' : 'wrong');
+
+    showFeedback(qId, isOk,
+      isOk ? '✅ Esatto! La risposta corretta contiene "merge conflict(s)".' :
+             '❌ Non esatto. La risposta corretta è: <strong>merge conflict(s)</strong> (conflitti di merge).');
+
+    document.querySelector(`#${qId} .btn-check`).disabled = true;
+    updateSidebarScore();
+  }
+
+  /* ── Ordinamento (drag & drop) ── */
+  let dragSrc = null;
+
+  document.querySelectorAll('.sort-item').forEach(item => {
+    item.addEventListener('dragstart', function(e) {
+      dragSrc = this;
+      this.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+    item.addEventListener('dragend', function() {
+      this.classList.remove('dragging');
+      document.querySelectorAll('.sort-item').forEach(i => i.classList.remove('drag-over'));
+    });
+    item.addEventListener('dragover', function(e) {
+      e.preventDefault();
+      if (this !== dragSrc) {
+        document.querySelectorAll('.sort-item').forEach(i => i.classList.remove('drag-over'));
+        this.classList.add('drag-over');
+      }
+    });
+    item.addEventListener('drop', function(e) {
+      e.preventDefault();
+      if (this !== dragSrc) {
+        const list = this.parentNode;
+        const items = [...list.children];
+        const srcIdx  = items.indexOf(dragSrc);
+        const destIdx = items.indexOf(this);
+        if (srcIdx < destIdx) {
+          list.insertBefore(dragSrc, this.nextSibling);
+        } else {
+          list.insertBefore(dragSrc, this);
+        }
+      }
+      this.classList.remove('drag-over');
+    });
+  });
+
+  function checkSort(listId, correctOrder, qNum) {
+    const qId = 'q' + qNum;
+    if (state.locked[qId]) return;
+
+    const list  = document.getElementById(listId);
+    const items = [...list.children];
+    const current = items.map(i => parseInt(i.dataset.order));
+    const isOk = JSON.stringify(current) === JSON.stringify(correctOrder);
+
+    state.locked[qId] = true;
+    state.scores[qId] = isOk;
+
+    items.forEach((item, idx) => {
+      item.draggable = false;
+      item.classList.add(current[idx] === correctOrder[idx] ? 'correct' : 'wrong');
+    });
+
+    showFeedback(qId, isOk,
+      isOk ? '✅ Ordine corretto! Hai rispettato la sequenza esatta.' :
+             '❌ Ordine non corretto. La sequenza corretta è: Settings → Add people → Scegli ruolo → Accetta invito.');
+
+    document.querySelector(`#${qId} .btn-check`).disabled = true;
+    updateSidebarScore();
+  }
+
+  /* ── Feedback ── */
+  function showFeedback(qId, isOk, msg) {
+    const fb = document.getElementById(`${qId}-fb`);
+    fb.className = 'quiz-feedback show ' + (isOk ? 'ok' : 'err');
+    fb.innerHTML = '<p>' + msg + '</p>';
+  }
+
+  /* ── Risultati finali ── */
+  function showResults() {
+    const correct = Object.values(state.scores).filter(Boolean).length;
+    const total   = 10;
+    const pct     = Math.round(correct / total * 100);
+
+    document.getElementById('results-box').style.display = 'block';
+    document.getElementById('res-score').innerHTML = correct + ' <span>/ ' + total + '</span>';
+
+    let msg = '';
+    if (pct === 100) msg = '🏆 Perfetto! Hai risposto correttamente a tutte le domande.';
+    else if (pct >= 80) msg = '🎉 Ottimo risultato! Hai una buona padronanza degli argomenti.';
+    else if (pct >= 60) msg = '👍 Risultato sufficiente. Ripasssa i concetti con errori e riprova.';
+    else msg = '📖 Risultato da migliorare. Torna al tutorial e rileggi le sezioni dove hai sbagliato.';
+
+    document.getElementById('res-msg').textContent = msg;
+    setTimeout(() => {
+      document.getElementById('res-bar').style.width = pct + '%';
+    }, 100);
+
+    document.getElementById('results-box').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  /* ── Reset ── */
+  function resetAll() {
+    if (!confirm('Vuoi davvero ricominciare? Tutte le risposte saranno azzerate.')) return;
+    location.reload();
+  }
+
+  /* ── Salva link repository ── */
+  function saveLink() {
+    const inp = document.getElementById('link-repo');
+    const val = inp.value.trim();
+    if (!val || !val.startsWith('http')) {
+      alert('Inserisci un link valido che inizi con https://');
+      return;
+    }
+    inp.classList.add('saved');
+    inp.readOnly = true;
+    const confirm = document.getElementById('link-confirm');
+    confirm.classList.add('show');
+    confirm.textContent = '✅ Link salvato: ' + val + ' — Mostra questa pagina al docente oppure invia il link tramite il canale indicato.';
+  }
+
+  /* ── Salva link PR GitHub Desktop ── */
+  function saveLink2() {
+    const inp = document.getElementById('link-desktop');
+    const val = inp.value.trim();
+    if (!val || !val.startsWith('http')) {
+      alert('Inserisci un link valido che inizi con https://');
+      return;
+    }
+    inp.classList.add('saved');
+    inp.readOnly = true;
+    const confirm = document.getElementById('link-desktop-confirm');
+    confirm.classList.add('show');
+    confirm.textContent = '✅ Link PR salvato: ' + val + ' — Mostra questa pagina al docente oppure invia il link tramite il canale indicato.';
+  }
+
+  /* ── Scrollspy ── */
+  const sections = document.querySelectorAll('.section[id]');
+  const navLinks = document.querySelectorAll('#sidebar a.nav-link[href^="#"]');
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(l => l.classList.remove('active-spy'));
+        const link = document.querySelector(`#sidebar a[href="#${entry.target.id}"]`);
+        if (link) link.classList.add('active-spy');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
