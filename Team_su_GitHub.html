@@ -1,0 +1,1764 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tutorial GitHub — Team su GitHub</title>
+  <style>
+    /* ─── Reset & Base ─────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --brand:       #0969da;
+      --brand-dark:  #0550ae;
+      --brand-light: #dbeafe;
+      --green:       #1a7f37;
+      --green-bg:    #dcfce7;
+      --green-dark:  #116329;
+      --purple:      #8250df;
+      --purple-bg:   #f3eeff;
+      --purple-dark: #6639ba;
+      --orange:      #bc4c00;
+      --orange-bg:   #fff8f0;
+      --orange-dark: #953800;
+      --red:         #cf222e;
+      --red-bg:      #fff0f0;
+      --teal:        #0a7073;
+      --teal-bg:     #e6f7f7;
+      --gray-50:     #f6f8fa;
+      --gray-100:    #eaeef2;
+      --gray-200:    #d0d7de;
+      --gray-400:    #8c959f;
+      --gray-500:    #6e7781;
+      --gray-700:    #424a53;
+      --gray-900:    #24292f;
+      --sidebar-w:   272px;
+      --radius:      8px;
+      --shadow:      0 1px 3px rgba(0,0,0,.12), 0 1px 2px rgba(0,0,0,.08);
+      --shadow-md:   0 4px 12px rgba(0,0,0,.10);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--gray-900);
+      background: #fff;
+      display: flex;
+    }
+
+    /* ─── Sidebar ────────────────────────────────────────────────── */
+    #sidebar {
+      position: fixed;
+      top: 0; left: 0;
+      width: var(--sidebar-w);
+      height: 100vh;
+      background: var(--gray-50);
+      border-right: 1px solid var(--gray-200);
+      overflow-y: auto;
+      padding: 0 0 2rem;
+      z-index: 100;
+    }
+
+    #sidebar .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 1.2rem 1.4rem;
+      border-bottom: 1px solid var(--gray-200);
+      background: var(--gray-900);
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.95rem;
+      letter-spacing: 0.01em;
+      text-decoration: none;
+    }
+    #sidebar .logo svg { flex-shrink: 0; }
+
+    #sidebar nav { padding: 1rem 0; }
+
+    #sidebar .nav-section {
+      padding: 0.4rem 1.4rem 0.2rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--gray-500);
+      margin-top: 0.8rem;
+    }
+
+    #sidebar a.nav-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0.45rem 1.4rem;
+      font-size: 0.88rem;
+      color: var(--gray-700);
+      text-decoration: none;
+      border-left: 3px solid transparent;
+      transition: background .15s, color .15s, border-color .15s;
+    }
+    #sidebar a.nav-link:hover { background: var(--gray-100); color: var(--brand); }
+    #sidebar a.nav-link.active {
+      background: var(--brand-light);
+      color: var(--brand);
+      border-left-color: var(--brand);
+      font-weight: 600;
+    }
+    #sidebar .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .dot-blue   { background: var(--brand); }
+    .dot-green  { background: var(--green); }
+    .dot-purple { background: var(--purple); }
+    .dot-orange { background: var(--orange); }
+    .dot-teal   { background: var(--teal); }
+
+    /* ─── Main Content ───────────────────────────────────────────── */
+    main {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      min-height: 100vh;
+    }
+
+    /* ─── Hero ───────────────────────────────────────────────────── */
+    .hero {
+      background: linear-gradient(135deg, #0d1117 0%, #161b22 60%, #21262d 100%);
+      color: #e6edf3;
+      padding: 3.5rem 4rem 3rem;
+      border-bottom: 1px solid var(--gray-200);
+    }
+    .hero .badge {
+      display: inline-block;
+      background: rgba(56,139,253,.15);
+      border: 1px solid rgba(56,139,253,.4);
+      color: #58a6ff;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: .25rem .75rem;
+      border-radius: 20px;
+      margin-bottom: 1rem;
+      letter-spacing: 0.05em;
+    }
+    .hero h1 { font-size: 2.2rem; font-weight: 700; margin-bottom: 0.5rem; line-height: 1.2; }
+    .hero p { font-size: 1.05rem; color: #8b949e; max-width: 620px; }
+    .hero .meta {
+      margin-top: 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.2rem;
+      font-size: 0.82rem;
+      color: #6e7781;
+    }
+    .hero .meta span { display: flex; align-items: center; gap: 5px; }
+
+    /* ─── Sections ───────────────────────────────────────────────── */
+    .section {
+      padding: 3rem 4rem;
+      border-bottom: 1px solid var(--gray-100);
+      scroll-margin-top: 20px;
+    }
+    .section:last-child { border-bottom: none; }
+
+    /* Section color accents */
+    .section-collab { border-left: 4px solid var(--brand); }
+    .section-branch { border-left: 4px solid var(--green); }
+    .section-fork   { border-left: 4px solid var(--purple); }
+    .section-fork2  { border-left: 4px solid var(--orange); }
+    .section-summary{ border-left: 4px solid var(--teal); }
+
+    h2 {
+      font-size: 1.7rem;
+      font-weight: 700;
+      color: var(--gray-900);
+      margin-bottom: 0.3rem;
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+    }
+    h2 .num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      font-size: 0.85rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      color: #fff;
+    }
+    .num-blue   { background: var(--brand); }
+    .num-green  { background: var(--green); }
+    .num-purple { background: var(--purple); }
+    .num-orange { background: var(--orange); }
+    .num-teal   { background: var(--teal); }
+
+    h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--gray-900);
+      margin: 2rem 0 0.6rem;
+    }
+    h3:first-child { margin-top: 0; }
+
+    h4 {
+      font-size: 0.97rem;
+      font-weight: 700;
+      color: var(--gray-900);
+      margin-bottom: 0.3rem;
+    }
+
+    p { margin-bottom: 0.9rem; color: var(--gray-700); }
+    p:last-child { margin-bottom: 0; }
+
+    .section-intro {
+      border-bottom: 2px solid var(--gray-100);
+      padding-bottom: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    /* ─── Diagram wrapper ────────────────────────────────────────── */
+    .diagram-wrapper {
+      background: var(--gray-50);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius);
+      padding: 1.5rem 1rem;
+      margin: 1.5rem 0;
+      text-align: center;
+      overflow-x: auto;
+    }
+    .diagram-wrapper figcaption {
+      margin-top: 0.75rem;
+      font-size: 0.82rem;
+      color: var(--gray-500);
+      font-style: italic;
+    }
+
+    /* ─── Pro / Contro cards ─────────────────────────────────────── */
+    .procon-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+    @media (max-width: 700px) { .procon-grid { grid-template-columns: 1fr; } }
+
+    .procon-card {
+      border-radius: var(--radius);
+      padding: 1.2rem 1.4rem;
+      border: 1px solid;
+    }
+    .procon-card.pro  { background: var(--green-bg);  border-color: #86efac; }
+    .procon-card.con  { background: var(--red-bg);    border-color: #fca5a5; }
+
+    .procon-card .procon-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .procon-card.pro .procon-title { color: var(--green-dark); }
+    .procon-card.con .procon-title { color: var(--red); }
+
+    .procon-card ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .procon-card ul li {
+      font-size: 0.88rem;
+      color: var(--gray-700);
+      padding: 0.3rem 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 7px;
+      line-height: 1.5;
+    }
+    .procon-card ul li::before {
+      content: '';
+      flex-shrink: 0;
+      display: inline-block;
+      width: 16px; height: 16px;
+      margin-top: 2px;
+      background-size: contain;
+      background-repeat: no-repeat;
+    }
+    .pro li::before {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%231a7f37' d='M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.749.749 0 0 1 .326-1.275.749.749 0 0 1 .734.215L6 10.93l6.72-6.71a.75.75 0 0 1 1.06 0Z'/%3E%3C/svg%3E");
+    }
+    .con li::before {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%23cf222e' d='M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z'/%3E%3C/svg%3E");
+    }
+
+    /* ─── Use-case chips ─────────────────────────────────────────── */
+    .usecase-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 0.85rem;
+      margin: 1.2rem 0;
+    }
+    .usecase-card {
+      background: var(--gray-50);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius);
+      padding: 1rem 1.1rem;
+      box-shadow: var(--shadow);
+    }
+    .usecase-card .uc-icon { font-size: 1.5rem; margin-bottom: 0.35rem; }
+    .usecase-card h4 { font-size: 0.9rem; margin-bottom: 0.2rem; }
+    .usecase-card p { font-size: 0.82rem; color: var(--gray-500); margin: 0; }
+
+    /* ─── Steps ──────────────────────────────────────────────────── */
+    .steps { margin: 1.5rem 0; }
+    .step {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.1rem;
+      align-items: flex-start;
+    }
+    .step-num {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 30px; height: 30px;
+      background: var(--brand);
+      color: #fff;
+      border-radius: 50%;
+      font-size: 0.82rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 3px;
+    }
+    .step-num.green  { background: var(--green); }
+    .step-num.purple { background: var(--purple); }
+    .step-num.orange { background: var(--orange); }
+
+    .step-body h4 { font-size: 0.93rem; font-weight: 700; margin-bottom: 0.15rem; }
+    .step-body p  { font-size: 0.86rem; color: var(--gray-700); margin: 0; }
+
+    /* ─── Code block ─────────────────────────────────────────────── */
+    .code-block {
+      background: #0d1117;
+      color: #e6edf3;
+      border-radius: var(--radius);
+      padding: 1.1rem 1.4rem;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 0.84rem;
+      line-height: 1.6;
+      margin: 1rem 0;
+      overflow-x: auto;
+    }
+    .code-block .comment { color: #8b949e; }
+    .code-block .cmd     { color: #79c0ff; }
+    .code-block .arg     { color: #a5d6ff; }
+    .code-block .str     { color: #a8ff78; }
+    .code-block .flag    { color: #ff9a3c; }
+
+    /* ─── Callout boxes ──────────────────────────────────────────── */
+    .callout {
+      border-radius: var(--radius);
+      padding: 1rem 1.2rem;
+      margin: 1.2rem 0;
+      font-size: 0.9rem;
+      display: flex;
+      gap: 0.8rem;
+      align-items: flex-start;
+      border: 1px solid;
+    }
+    .callout-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+    .callout-body { flex: 1; }
+    .callout-body p { font-size: 0.88rem; margin: 0; color: var(--gray-700); }
+    .callout-body strong { display: block; font-size: 0.88rem; margin-bottom: 0.2rem; }
+
+    .callout-info   { background: var(--brand-light); border-color: #93c5fd; }
+    .callout-tip    { background: var(--green-bg);    border-color: #86efac; }
+    .callout-warn   { background: var(--orange-bg);   border-color: #fdba74; }
+    .callout-purple { background: var(--purple-bg);   border-color: #c4b5fd; }
+
+    /* ─── Comparison table ───────────────────────────────────────── */
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.88rem;
+    }
+    .compare-table th {
+      background: var(--gray-50);
+      border: 1px solid var(--gray-200);
+      padding: 0.7rem 1rem;
+      text-align: left;
+      font-weight: 700;
+      color: var(--gray-900);
+      white-space: nowrap;
+    }
+    .compare-table td {
+      border: 1px solid var(--gray-200);
+      padding: 0.65rem 1rem;
+      color: var(--gray-700);
+      vertical-align: top;
+    }
+    .compare-table tr:hover td { background: var(--gray-50); }
+    .compare-table .badge-sm {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: .15rem .5rem;
+      border-radius: 12px;
+    }
+    .badge-blue   { background: var(--brand-light); color: var(--brand-dark); }
+    .badge-green  { background: var(--green-bg);    color: var(--green-dark); }
+    .badge-purple { background: var(--purple-bg);   color: var(--purple-dark); }
+    .badge-orange { background: var(--orange-bg);   color: var(--orange-dark); }
+
+    /* ─── Fork comparison two-column ─────────────────────────────── */
+    .fork-compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem;
+      margin: 1.5rem 0;
+    }
+    @media (max-width: 700px) { .fork-compare { grid-template-columns: 1fr; } }
+
+    .fork-box {
+      border-radius: var(--radius);
+      padding: 1.3rem 1.4rem;
+      border: 2px solid;
+    }
+    .fork-box.contrib  { border-color: var(--green);  background: #f0fdf4; }
+    .fork-box.personal { border-color: var(--purple); background: #faf5ff; }
+
+    .fork-box .fork-box-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 0.9rem;
+    }
+    .fork-box .fork-box-header .ficon {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .fork-box.contrib  .ficon { background: var(--green-bg); }
+    .fork-box.personal .ficon { background: var(--purple-bg); }
+
+    .fork-box .fork-box-header h4 { font-size: 1rem; margin: 0; }
+    .fork-box.contrib  .fork-box-header h4 { color: var(--green-dark); }
+    .fork-box.personal .fork-box-header h4 { color: var(--purple-dark); }
+
+    .fork-box ul {
+      list-style: none; padding: 0; margin: 0;
+    }
+    .fork-box ul li {
+      font-size: 0.87rem;
+      color: var(--gray-700);
+      padding: 0.3rem 0;
+      padding-left: 1.2rem;
+      position: relative;
+      line-height: 1.5;
+    }
+    .fork-box ul li::before {
+      content: '→';
+      position: absolute; left: 0;
+      color: var(--gray-400);
+    }
+
+    /* ─── Summary decision table ─────────────────────────────────── */
+    .decision-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+    @media (max-width: 700px) { .decision-grid { grid-template-columns: 1fr; } }
+
+    .decision-card {
+      border-radius: var(--radius);
+      padding: 1.3rem;
+      border: 1px solid var(--gray-200);
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+    .decision-card .dc-icon { font-size: 2.2rem; margin-bottom: 0.5rem; }
+    .decision-card h4 { font-size: 1rem; margin-bottom: 0.5rem; }
+    .decision-card p { font-size: 0.83rem; color: var(--gray-500); margin: 0; }
+    .dc-blue   { border-top: 4px solid var(--brand); }
+    .dc-green  { border-top: 4px solid var(--green); }
+    .dc-purple { border-top: 4px solid var(--purple); }
+
+    /* ─── Back to index link ─────────────────────────────────────── */
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.82rem;
+      color: var(--gray-500);
+      text-decoration: none;
+      margin-top: 0.5rem;
+    }
+    .back-link:hover { color: var(--brand); }
+
+    /* ─── Scrollspy active highlight ─────────────────────────────── */
+    #sidebar a.nav-link.active-spy {
+      background: var(--brand-light);
+      color: var(--brand);
+      border-left-color: var(--brand);
+      font-weight: 600;
+    }
+
+    /* ─── Method tabs (Web / Desktop) ───────────────────────────── */
+    .method-tabs {
+      margin: 1.5rem 0 0;
+    }
+    .tab-bar {
+      display: flex;
+      gap: 0;
+      border-bottom: 2px solid var(--gray-200);
+      margin-bottom: 0;
+    }
+    .tab-btn {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 0.6rem 1.2rem;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--gray-500);
+      background: none;
+      border: none;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      cursor: pointer;
+      transition: color .15s, border-color .15s;
+    }
+    .tab-btn:hover { color: var(--gray-900); }
+    .tab-btn.active { color: var(--brand); border-bottom-color: var(--brand); }
+    .tab-btn .tb-icon { font-size: 1rem; }
+
+    .tab-panel {
+      display: none;
+      background: var(--gray-50);
+      border: 1px solid var(--gray-200);
+      border-top: none;
+      border-radius: 0 0 var(--radius) var(--radius);
+      padding: 1.6rem 1.8rem 1.4rem;
+    }
+    .tab-panel.active { display: block; }
+
+    /* ─── Method badge (etichetta contesto) ─────────────────────── */
+    .method-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: .2rem .65rem;
+      border-radius: 20px;
+      margin-bottom: 1rem;
+      letter-spacing: 0.04em;
+    }
+    .method-badge.web  { background: var(--brand-light); color: var(--brand-dark); }
+    .method-badge.desk { background: #fff3e0; color: #7c4700; border: 1px solid #fdba74; }
+
+    /* ─── UI path (percorso cliccabile simulato) ─────────────────── */
+    .ui-path {
+      display: inline-flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.84rem;
+      color: var(--gray-700);
+      margin-bottom: 0.4rem;
+    }
+    .ui-path .ui-btn {
+      background: #fff;
+      border: 1px solid var(--gray-200);
+      border-radius: 5px;
+      padding: .15rem .5rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--gray-900);
+      box-shadow: 0 1px 2px rgba(0,0,0,.08);
+    }
+    .ui-path .ui-sep {
+      color: var(--gray-400);
+      font-size: 0.78rem;
+    }
+
+    /* step dentro i tab — riusa .steps ma con colori differenziati */
+    .tab-panel .step-num.web-step  { background: var(--brand); }
+    .tab-panel .step-num.desk-step { background: #e07b00; }
+
+    /* ─── Note terminale (riferimento opzionale) ─────────────────── */
+    .cli-note {
+      margin-top: 1rem;
+      padding: 0.7rem 1rem;
+      background: #f6f8fa;
+      border: 1px solid var(--gray-200);
+      border-left: 3px solid var(--gray-400);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      font-size: 0.82rem;
+      color: var(--gray-500);
+    }
+    .cli-note strong { color: var(--gray-700); font-size: 0.82rem; }
+    .cli-note code {
+      background: var(--gray-100);
+      padding: .1rem .35rem;
+      border-radius: 4px;
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-size: 0.8rem;
+      color: var(--gray-900);
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SIDEBAR
+════════════════════════════════════════════════════════════════ -->
+<aside id="sidebar">
+  <a class="logo" href="index.html">
+    <svg height="22" viewBox="0 0 16 16" fill="white" xmlns="http://www.w3.org/2000/svg">
+      <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38
+               0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13
+               -.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87
+               2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95
+               0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12
+               0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27
+               1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82
+               2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48
+               0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0
+               0016 8c0-4.42-3.58-8-8-8z"/>
+    </svg>
+    Tutorial GitHub
+  </a>
+
+  <nav>
+    <div class="nav-section">In questa pagina</div>
+
+    <a class="nav-link" href="#collaboratori">
+      <span class="dot dot-blue"></span> Collaboratori
+    </a>
+    <a class="nav-link" href="#collab-usecases">
+      <span style="width:8px;flex-shrink:0"></span> Casi d'uso
+    </a>
+    <a class="nav-link" href="#collab-procon">
+      <span style="width:8px;flex-shrink:0"></span> Pro &amp; Contro
+    </a>
+    <a class="nav-link" href="#collab-steps">
+      <span style="width:8px;flex-shrink:0"></span> Come si gestiscono
+    </a>
+
+    <a class="nav-link" href="#branch">
+      <span class="dot dot-green"></span> Branch
+    </a>
+    <a class="nav-link" href="#branch-usecases">
+      <span style="width:8px;flex-shrink:0"></span> Casi d'uso
+    </a>
+    <a class="nav-link" href="#branch-procon">
+      <span style="width:8px;flex-shrink:0"></span> Pro &amp; Contro
+    </a>
+    <a class="nav-link" href="#branch-workflow">
+      <span style="width:8px;flex-shrink:0"></span> Workflow tipico
+    </a>
+
+    <a class="nav-link" href="#fork">
+      <span class="dot dot-purple"></span> Fork
+    </a>
+    <a class="nav-link" href="#fork-usecases">
+      <span style="width:8px;flex-shrink:0"></span> Casi d'uso
+    </a>
+    <a class="nav-link" href="#fork-procon">
+      <span style="width:8px;flex-shrink:0"></span> Pro &amp; Contro
+    </a>
+    <a class="nav-link" href="#fork-tipi">
+      <span style="width:8px;flex-shrink:0"></span> Contributo vs Personale
+    </a>
+
+    <a class="nav-link" href="#riepilogo">
+      <span class="dot dot-teal"></span> Riepilogo
+    </a>
+
+    <div class="nav-section" style="margin-top:1.5rem">Altri tutorial</div>
+    <a class="nav-link" href="tutorial-github.html">
+      <span class="dot" style="background:#8b949e"></span> Introduzione a GitHub
+    </a>
+    <a class="nav-link" href="index.html">
+      <span class="dot" style="background:#8b949e"></span> ← Torna all'indice
+    </a>
+  </nav>
+</aside>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     MAIN
+════════════════════════════════════════════════════════════════ -->
+<main>
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="badge">CORSO TEPSIT — ANNO 3</div>
+    <h1>Collaboratori, Branch e Fork</h1>
+    <p>I tre meccanismi fondamentali per lavorare in team su GitHub: quando usarli, come funzionano, vantaggi e limiti di ciascuno.</p>
+    <div class="meta">
+      <span>
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M1.5 8a6.5 6.5 0 1 1 13 0 6.5 6.5 0 0 1-13 0ZM8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0Zm.5 4.75a.75.75 0 0 0-1.5 0v3.5a.75.75 0 0 0 .471.696l2.5 1a.75.75 0 0 0 .557-1.392L8.5 7.742Z"/></svg>
+        Lettura ~20 min
+      </span>
+      <span>
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M0 1.75A.75.75 0 0 1 .75 1h4.253c1.227 0 2.317.59 3 1.501A3.743 3.743 0 0 1 11.006 1h4.245a.75.75 0 0 1 .75.75v10.5a.75.75 0 0 1-.75.75h-4.507a2.25 2.25 0 0 0-1.591.659l-.622.621a.75.75 0 0 1-1.06 0l-.622-.621A2.25 2.25 0 0 0 5.258 13H.75a.75.75 0 0 1-.75-.75Z"/></svg>
+        Collaboratori · Branch · Fork
+      </span>
+      <span>
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M5 5.372v.878c0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75v-.878a2.25 2.25 0 1 1 1.5 0v.878a2.25 2.25 0 0 1-2.25 2.25h-1.5v2.128a2.251 2.251 0 1 1-1.5 0V8.5h-1.5A2.25 2.25 0 0 1 3.5 6.25v-.878a2.25 2.25 0 1 1 1.5 0ZM5 3.25a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Zm6.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm-3 8.75a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Z"/></svg>
+        Diagrammi SVG inclusi
+      </span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       SEZIONE 1 — COLLABORATORI
+  ═══════════════════════════════════════════════ -->
+  <div class="section section-collab" id="collaboratori">
+    <div class="section-intro">
+      <h2><span class="num num-blue">1</span> Collaboratori</h2>
+      <p>Un <strong>collaboratore</strong> è un utente GitHub a cui il proprietario di un repository ha concesso accesso diretto in scrittura (<em>write access</em>). A differenza dei fork, i collaboratori lavorano <em>direttamente</em> sul repository originale, con piena capacità di aprire branch, fare push e fare merge.</p>
+    </div>
+
+    <!-- Diagramma collaboratori -->
+    <div class="diagram-wrapper" id="collab-usecases">
+      <svg viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg" style="max-width:660px;width:100%">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#8c959f"/>
+          </marker>
+        </defs>
+        <!-- Repo centrale -->
+        <rect x="270" y="80" width="160" height="80" rx="10" fill="#dbeafe" stroke="#0969da" stroke-width="2"/>
+        <text x="350" y="114" text-anchor="middle" font-size="13" font-weight="700" fill="#0550ae">Repository</text>
+        <text x="350" y="132" text-anchor="middle" font-size="11" fill="#424a53">Centrale (GitHub)</text>
+
+        <!-- Owner -->
+        <rect x="20" y="90" width="110" height="60" rx="8" fill="#f0fdf4" stroke="#1a7f37" stroke-width="1.5"/>
+        <text x="75" y="117" text-anchor="middle" font-size="12" font-weight="700" fill="#116329">👑 Owner</text>
+        <text x="75" y="133" text-anchor="middle" font-size="10" fill="#424a53">Accesso pieno</text>
+
+        <!-- Collaboratore A — spostato in basso al centro-sinistra -->
+        <rect x="200" y="215" width="120" height="60" rx="8" fill="#dbeafe" stroke="#0969da" stroke-width="1.5"/>
+        <text x="260" y="243" text-anchor="middle" font-size="12" font-weight="700" fill="#0550ae">👤 Collab. A</text>
+        <text x="260" y="261" text-anchor="middle" font-size="10" fill="#424a53">Write access</text>
+
+        <!-- Collaboratore B — spostato in basso al centro-destra -->
+        <rect x="345" y="215" width="120" height="60" rx="8" fill="#dbeafe" stroke="#0969da" stroke-width="1.5"/>
+        <text x="405" y="243" text-anchor="middle" font-size="12" font-weight="700" fill="#0550ae">👤 Collab. B</text>
+        <text x="405" y="261" text-anchor="middle" font-size="10" fill="#424a53">Write access</text>
+
+        <!-- Collaboratore C -->
+        <rect x="570" y="90" width="110" height="60" rx="8" fill="#dbeafe" stroke="#0969da" stroke-width="1.5"/>
+        <text x="625" y="117" text-anchor="middle" font-size="12" font-weight="700" fill="#0550ae">👤 Collab. C</text>
+        <text x="625" y="133" text-anchor="middle" font-size="10" fill="#424a53">Write access</text>
+
+        <!-- Frecce -->
+        <line x1="130" y1="120" x2="268" y2="120" stroke="#8c959f" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="260" y1="215" x2="315" y2="162" stroke="#8c959f" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="405" y1="215" x2="388" y2="162" stroke="#8c959f" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="568" y1="120" x2="432" y2="120" stroke="#8c959f" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Label frecce -->
+        <text x="195" y="112" text-anchor="middle" font-size="10" fill="#6e7781">push / pull</text>
+        <text x="500" y="112" text-anchor="middle" font-size="10" fill="#6e7781">push / pull</text>
+        <text x="296" y="196" text-anchor="middle" font-size="10" fill="#6e7781">push / pull</text>
+      </svg>
+      <figcaption>Tutti i collaboratori lavorano direttamente sullo stesso repository centrale.</figcaption>
+    </div>
+
+    <h3>Casi d'uso ottimali</h3>
+    <div class="usecase-grid">
+      <div class="usecase-card">
+        <div class="uc-icon">🏢</div>
+        <h4>Team aziendale privato</h4>
+        <p>Piccolo gruppo di sviluppatori fidati che lavorano sullo stesso prodotto.</p>
+      </div>
+      <div class="usecase-card">
+        <div class="uc-icon">🎓</div>
+        <h4>Progetto scolastico</h4>
+        <p>Studenti che collaborano su un repository di gruppo senza burocrazia aggiuntiva.</p>
+      </div>
+      <div class="usecase-card">
+        <div class="uc-icon">🔒</div>
+        <h4>Repository privato</h4>
+        <p>Quando il codice non è pubblico e si vuole controllare chi accede.</p>
+      </div>
+      <div class="usecase-card">
+        <div class="uc-icon">⚡</div>
+        <h4>Iterazioni rapide</h4>
+        <p>Startup o hackathon dove la velocità conta più della formalità delle review.</p>
+      </div>
+    </div>
+
+    <!-- Pro / Contro -->
+    <div class="procon-grid" id="collab-procon">
+      <div class="procon-card pro">
+        <div class="procon-title">✔ Pro</div>
+        <ul>
+          <li>Accesso diretto, nessun fork necessario</li>
+          <li>Configurazione semplice e immediata</li>
+          <li>Visibilità completa sulla storia dei commit</li>
+          <li>Ideale per team piccoli e fidati</li>
+          <li>Possibilità di assegnare diversi livelli di permesso (read, triage, write, maintain, admin)</li>
+        </ul>
+      </div>
+      <div class="procon-card con">
+        <div class="procon-title">✘ Contro</div>
+        <ul>
+          <li>Rischio di push accidentali su branch protetti</li>
+          <li>Ogni collaboratore vede e modifica l'intera codebase</li>
+          <li>Non scalabile per community aperte (open source pubblico)</li>
+          <li>Difficile revocare selettivamente l'accesso a singole parti</li>
+          <li>Un collaboratore con permessi elevati può causare danni irreversibili</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Come si aggiunge un collaboratore -->
+    <h3 id="collab-steps">Come aggiungere un collaboratore</h3>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h4>Vai alle impostazioni del repository</h4>
+          <p>Dal repository su GitHub, clicca su <em>Settings</em> → <em>Collaborators and teams</em>.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h4>Aggiungi il collaboratore</h4>
+          <p>Clicca su <em>Add people</em> e cerca il nome utente o l'indirizzo email GitHub della persona.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h4>Scegli il livello di accesso</h4>
+          <p>Seleziona il ruolo: <strong>Read</strong> (solo lettura), <strong>Triage</strong> (gestione issue/PR), <strong>Write</strong> (push), <strong>Maintain</strong> o <strong>Admin</strong>.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h4>L'invitato accetta l'invito</h4>
+          <p>Il collaboratore riceve un'email con il link all'invito e deve accettarlo entro 7 giorni.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout callout-info">
+      <div class="callout-icon">ℹ️</div>
+      <div class="callout-body">
+        <strong>Branch Protection Rules</strong>
+        <p>Per proteggere il branch <code>main</code> da push diretti accidentali, vai in <em>Settings → Branches → Add rule</em> e abilita "Require a pull request before merging". Così anche i collaboratori con write access devono passare da una PR.</p>
+      </div>
+    </div>
+
+    <div class="callout callout-warn">
+      <div class="callout-icon">⚠️</div>
+      <div class="callout-body">
+        <strong>Attenzione ai permessi Admin</strong>
+        <p>Un collaboratore con ruolo <strong>Admin</strong> può modificare le impostazioni del repository, eliminare branch protetti o addirittura cancellare il repository stesso. Assegna questo ruolo con estrema cautela.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       SEZIONE 2 — BRANCH
+  ═══════════════════════════════════════════════ -->
+  <div class="section section-branch" id="branch">
+    <div class="section-intro">
+      <h2><span class="num num-green">2</span> Branch</h2>
+      <p>Un <strong>branch</strong> (ramo) è una linea di sviluppo indipendente all'interno dello stesso repository. Ogni branch è essenzialmente un puntatore mobile a uno specifico commit. Creare un branch non crea copie di file: Git si limita a memorizzare le differenze (<em>delta</em>), rendendo l'operazione istantanea e leggerissima.</p>
+    </div>
+
+    <!-- Diagramma branch -->
+    <div class="diagram-wrapper" id="branch-usecases">
+      <svg viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg" style="max-width:680px;width:100%">
+        <defs>
+          <marker id="arrbr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#1a7f37"/>
+          </marker>
+          <marker id="arrbl" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#0969da"/>
+          </marker>
+          <marker id="arrgr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#8c959f"/>
+          </marker>
+        </defs>
+
+        <!-- main branch -->
+        <text x="16" y="100" font-size="11" font-weight="700" fill="#0550ae">main</text>
+        <circle cx="80"  cy="110" r="11" fill="#0969da"/>
+        <circle cx="160" cy="110" r="11" fill="#0969da"/>
+        <circle cx="240" cy="110" r="11" fill="#0969da"/>
+        <!-- gap per feature branch -->
+        <circle cx="560" cy="110" r="11" fill="#0969da"/>
+        <circle cx="640" cy="110" r="11" fill="#0969da"/>
+
+        <line x1="91"  y1="110" x2="148" y2="110" stroke="#0969da" stroke-width="2.5"/>
+        <line x1="171" y1="110" x2="228" y2="110" stroke="#0969da" stroke-width="2.5"/>
+        <line x1="251" y1="110" x2="548" y2="110" stroke="#0969da" stroke-width="2.5" stroke-dasharray="4 3"/>
+        <line x1="571" y1="110" x2="628" y2="110" stroke="#0969da" stroke-width="2.5"/>
+
+        <!-- feature branch label -->
+        <text x="16" y="185" font-size="11" font-weight="700" fill="#1a7f37">feature</text>
+        <!-- branch point -->
+        <line x1="240" y1="121" x2="300" y2="173" stroke="#1a7f37" stroke-width="2" marker-end="url(#arrbr)"/>
+        <circle cx="320" cy="180" r="11" fill="#1a7f37"/>
+        <circle cx="400" cy="180" r="11" fill="#1a7f37"/>
+        <circle cx="480" cy="180" r="11" fill="#1a7f37"/>
+        <line x1="331" y1="180" x2="388" y2="180" stroke="#1a7f37" stroke-width="2.5"/>
+        <line x1="411" y1="180" x2="468" y2="180" stroke="#1a7f37" stroke-width="2.5"/>
+
+        <!-- merge back -->
+        <line x1="491" y1="171" x2="548" y2="121" stroke="#8c959f" stroke-width="2" stroke-dasharray="4 3" marker-end="url(#arrgr)"/>
+        <text x="508" y="155" font-size="10" fill="#6e7781">merge</text>
+
+        <!-- commit labels -->
+        <text x="73"  y="130" text-anchor="middle" font-size="9" fill="#fff">C1</text>
+        <text x="153" y="130" text-anchor="middle" font-size="9" fill="#fff">C2</text>
+        <text x="233" y="130" text-anchor="middle" font-size="9" fill="#fff">C3</text>
+        <text x="553" y="130" text-anchor="middle" font-size="9" fill="#fff">C7</text>
+        <text x="633" y="130" text-anchor="middle" font-size="9" fill="#fff">C8</text>
+        <text x="313" y="200" text-anchor="middle" font-size="9" fill="#fff">C4</text>
+        <text x="393" y="200" text-anchor="middle" font-size="9" fill="#fff">C5</text>
+        <text x="473" y="200" text-anchor="middle" font-size="9" fill="#fff">C6</text>
+
+        <!-- hotfix branch -->
+        <text x="16" y="45" font-size="11" font-weight="700" fill="#cf222e">hotfix</text>
+        <line x1="160" y1="99" x2="200" y2="52" stroke="#cf222e" stroke-width="1.8"/>
+        <circle cx="215" cy="45" r="9" fill="#cf222e"/>
+        <line x1="224" y1="45" x2="400" y2="45" stroke="#cf222e" stroke-width="1.8" stroke-dasharray="4 3"/>
+        <line x1="400" y1="45" x2="440" y2="98" stroke="#8c959f" stroke-width="1.8" stroke-dasharray="4 3" marker-end="url(#arrgr)"/>
+        <text x="207" y="62" font-size="9" fill="#fff">H1</text>
+        <text x="350" y="40" text-anchor="middle" font-size="9" fill="#6e7781">fix urgente</text>
+      </svg>
+      <figcaption>Il branch <code>feature</code> si ramifica da <code>main</code> in C3, evolve autonomamente e poi viene unito con un merge. Il branch <code>hotfix</code> gestisce una correzione urgente.</figcaption>
+    </div>
+
+    <h3>Casi d'uso ottimali</h3>
+    <div class="usecase-grid">
+      <div class="usecase-card">
+        <div class="uc-icon">🌿</div>
+        <h4>Feature branch</h4>
+        <p>Ogni nuova funzionalità viene sviluppata in isolamento, senza interferire con il codice stabile.</p>
+      </div>
+      <div class="usecase-card">
+        <div class="uc-icon">🚑</div>
+        <h4>Hotfix</h4>
+        <p>Correzione urgente di un bug in produzione senza dover attendere il completamento delle feature in sviluppo.</p>
+      </div>
+      <div class="usecase-card">
+        <div class="uc-icon">🧪</div>
+        <h4>Sperimentazione</h4>
+        <p>Testare un approccio tecnico rischioso senza compromettere il codice principale.</p>
+      </div>
+      <div class="usecase-card">
+        <div class="uc-icon">🔖</div>
+        <h4>Release branch</h4>
+        <p>Congelare una versione per le ultime correzioni mentre <code>main</code> procede con nuove feature.</p>
+      </div>
+      <div class="usecase-card">
+        <div class="uc-icon">👩‍💻</div>
+        <h4>Code review</h4>
+        <p>Il branch è la base per aprire una Pull Request e ricevere feedback prima del merge.</p>
+      </div>
+      <div class="usecase-card">
+        <div class="uc-icon">🏭</div>
+        <h4>Ambienti multipli</h4>
+        <p>Branch <code>develop</code>, <code>staging</code>, <code>production</code> per gestire i diversi ambienti di deploy.</p>
+      </div>
+    </div>
+
+    <div class="procon-grid" id="branch-procon">
+      <div class="procon-card pro">
+        <div class="procon-title">✔ Pro</div>
+        <ul>
+          <li>Operazione istantanea e a costo quasi zero (solo un puntatore)</li>
+          <li>Isolamento completo del lavoro in corso</li>
+          <li>Facilita la code review tramite Pull Request</li>
+          <li>Permette di lavorare in parallelo su più feature</li>
+          <li>Rollback facile: basta non fare merge o eliminare il branch</li>
+          <li>Integrazione con CI/CD: ogni branch può avere la sua pipeline</li>
+        </ul>
+      </div>
+      <div class="procon-card con">
+        <div class="procon-title">✘ Contro</div>
+        <ul>
+          <li>I branch longevi accumulano <em>merge conflicts</em> difficili da risolvere</li>
+          <li>Richiede disciplina: branch abbandonati creano confusione</li>
+          <li>Il merge di branch divergenti può richiedere molto tempo</li>
+          <li>Senza naming convention il repository diventa caotico</li>
+          <li>Non adatto a isolare lavori di persone esterne al repository</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 id="branch-workflow">Workflow tipico con i branch</h3>
+
+    <div class="method-tabs" id="tabs-branch">
+      <div class="tab-bar">
+        <button class="tab-btn active" data-tab="branch-web">
+          <span class="tb-icon">🌐</span> GitHub Web
+        </button>
+        <button class="tab-btn" data-tab="branch-desktop">
+          <span class="tb-icon">🖥️</span> GitHub Desktop
+        </button>
+      </div>
+
+      <!-- TAB: GitHub Web -->
+      <div class="tab-panel active" id="branch-web">
+        <span class="method-badge web">🌐 GitHub.com — interfaccia web</span>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num web-step">1</div>
+            <div class="step-body">
+              <h4>Apri il repository e crea il branch</h4>
+              <p>Nel repository su GitHub, clicca sul selettore del branch in alto a sinistra (di solito mostra <strong>main</strong>). Digita il nome del nuovo branch nel campo di ricerca, ad esempio <code>feature/login-oauth</code>, quindi clicca su <em>"Create branch: feature/login-oauth from main"</em>.</p>
+              <div class="ui-path">
+                <span class="ui-btn">📁 Repository</span>
+                <span class="ui-sep">→</span>
+                <span class="ui-btn">⎇ main ▾</span>
+                <span class="ui-sep">→</span>
+                <span class="ui-btn">digita nome branch</span>
+                <span class="ui-sep">→</span>
+                <span class="ui-btn">Create branch…</span>
+              </div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num web-step">2</div>
+            <div class="step-body">
+              <h4>Modifica i file direttamente online</h4>
+              <p>GitHub include un editor di testo integrato. Naviga nel file da modificare, clicca sull'icona della matita <strong>✏️</strong> in alto a destra, apporta le modifiche e clicca su <em>"Commit changes…"</em>. Scegli la modalità <em>"Commit directly to feature/login-oauth branch"</em>.</p>
+              <div class="ui-path">
+                <span class="ui-btn">Apri file</span>
+                <span class="ui-sep">→</span>
+                <span class="ui-btn">✏️ Edit</span>
+                <span class="ui-sep">→</span>
+                <span class="ui-btn">Commit changes…</span>
+              </div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num web-step">3</div>
+            <div class="step-body">
+              <h4>Apri la Pull Request</h4>
+              <p>Dopo il commit, GitHub mostra un banner giallo <em>"Compare &amp; pull request"</em>. Cliccalo, inserisci titolo e descrizione della PR, assegna reviewer se necessario, poi clicca <em>"Create pull request"</em>.</p>
+              <div class="ui-path">
+                <span class="ui-btn">Compare &amp; pull request</span>
+                <span class="ui-sep">→</span>
+                <span class="ui-btn">Titolo + descrizione</span>
+                <span class="ui-sep">→</span>
+                <span class="ui-btn">Create pull request</span>
+              </div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num web-step">4</div>
+            <div class="step-body">
+              <h4>Review e merge</h4>
+              <p>I reviewer approvano la PR. Il maintainer clicca <em>"Merge pull request"</em> → <em>"Confirm merge"</em>. Si può scegliere tra <em>Merge commit</em>, <em>Squash and merge</em> o <em>Rebase and merge</em> dal menu a discesa.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num web-step">5</div>
+            <div class="step-body">
+              <h4>Elimina il branch</h4>
+              <p>Dopo il merge, GitHub propone automaticamente il pulsante <em>"Delete branch"</em> nella pagina della PR. Cliccalo per rimuovere il branch remoto.</p>
+            </div>
+          </div>
+        </div>
+        <div class="cli-note">
+          <strong>Nota per chi usa anche il terminale:</strong> se lavori localmente, clona o aggiorna il repository con
+          <code>git pull</code>, crea il branch con <code>git switch -c feature/login-oauth</code> e pubblicalo con
+          <code>git push -u origin feature/login-oauth</code>. Il resto (PR, merge, eliminazione) si fa comunque su GitHub.com.
+        </div>
+      </div>
+
+      <!-- TAB: GitHub Desktop -->
+      <div class="tab-panel" id="branch-desktop">
+        <span class="method-badge desk">🖥️ GitHub Desktop — app per Windows e macOS</span>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num desk-step">1</div>
+            <div class="step-body">
+              <h4>Aggiorna il repository locale</h4>
+              <p>Assicurati di essere su <strong>main</strong>: dal menu in alto seleziona il branch <em>main</em> nel selettore centrale. Poi clicca <em>"Fetch origin"</em> nella toolbar per scaricare gli ultimi aggiornamenti.</p>
+              <div class="ui-path">
+                <span class="ui-btn">⎇ Current Branch: main</span>
+                <span class="ui-sep">→</span>
+                <span class="ui-btn">Fetch origin</span>
+              </div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num desk-step">2</div>
+            <div class="step-body">
+              <h4>Crea il nuovo branch</h4>
+              <p>Clicca sul pulsante <em>"Current Branch"</em> → <em>"New Branch"</em>. Inserisci il nome <code>feature/login-oauth</code> e clicca <em>"Create Branch"</em>. GitHub Desktop crea e passa automaticamente sul nuovo branch.</p>
+              <div class="ui-path">
+                <span class="ui-btn">⎇ Current Branch</span>
+                <span class="ui-sep">→</span>
+                <span class="ui-btn">New Branch</span>
+                <span class="ui-sep">→</span>
+                <span class="ui-btn">digita nome</span>
+                <span class="ui-sep">→</span>
+                <span class="ui-btn">Create Branch</span>
+              </div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num desk-step">3</div>
+            <div class="step-body">
+              <h4>Modifica i file con il tuo editor</h4>
+              <p>Clicca <em>"Open in …"</em> (VS Code, Xcode, ecc.) nella toolbar di GitHub Desktop oppure naviga manualmente alla cartella. Salva le modifiche: appariranno automaticamente nel pannello <em>Changes</em> a sinistra di GitHub Desktop.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num desk-step">4</div>
+            <div class="step-body">
+              <h4>Committa le modifiche</h4>
+              <p>Nel pannello <em>Changes</em>, spunta i file da includere, scrivi un titolo per il commit nel campo in basso (es. <em>"feat: aggiunge login OAuth"</em>) e clicca <em>"Commit to feature/login-oauth"</em>.</p>
+              <div class="ui-path">
+                <span class="ui-btn">☑ seleziona file</span>
+                <span class="ui-sep">→</span>
+                <span class="ui-btn">Titolo commit</span>
+                <span class="ui-sep">→</span>
+                <span class="ui-btn">Commit to feature/…</span>
+              </div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num desk-step">5</div>
+            <div class="step-body">
+              <h4>Pubblica il branch su GitHub</h4>
+              <p>Clicca il pulsante blu <em>"Publish branch"</em> nella toolbar. Il branch verrà caricato sul repository remoto su GitHub.com.</p>
+              <div class="ui-path">
+                <span class="ui-btn" style="background:#0969da;color:#fff;border-color:#0969da">Publish branch</span>
+              </div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num desk-step">6</div>
+            <div class="step-body">
+              <h4>Apri la Pull Request da Desktop</h4>
+              <p>Clicca <em>"Create Pull Request"</em> nella toolbar (o nel menu <em>Branch</em>): si apre automaticamente la pagina della PR su GitHub.com nel browser, già precompilata. Completa titolo, descrizione e crea la PR.</p>
+              <div class="ui-path">
+                <span class="ui-btn">Branch</span>
+                <span class="ui-sep">→</span>
+                <span class="ui-btn">Create Pull Request</span>
+                <span class="ui-sep">→</span>
+                <span class="ui-btn">[si apre GitHub.com]</span>
+              </div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num desk-step">7</div>
+            <div class="step-body">
+              <h4>Dopo il merge: sincronizza e pulisci</h4>
+              <p>Torna su <strong>main</strong> dal selettore branch, clicca <em>"Fetch origin"</em> poi <em>"Pull origin"</em>. Per eliminare il branch locale: <em>Branch</em> → <em>Delete…</em> → spunta <em>"Delete remote branch"</em>.</p>
+              <div class="ui-path">
+                <span class="ui-btn">⎇ main</span>
+                <span class="ui-sep">→</span>
+                <span class="ui-btn">Pull origin</span>
+                <span class="ui-sep">→</span>
+                <span class="ui-btn">Branch → Delete…</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout callout-tip">
+      <div class="callout-icon">💡</div>
+      <div class="callout-body">
+        <strong>Naming convention consigliata</strong>
+        <p>Usa prefissi per tipo: <code>feature/</code> per nuove funzionalità, <code>fix/</code> per bug, <code>hotfix/</code> per urgenze, <code>chore/</code> per manutenzione, <code>docs/</code> per documentazione. Separa le parole con il trattino: <code>feature/user-profile-page</code>.</p>
+      </div>
+    </div>
+
+    <!-- Strategie di branching -->
+    <h3>Principali strategie di branching</h3>
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Strategia</th>
+          <th>Descrizione</th>
+          <th>Adatta per</th>
+          <th>Complessità</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>GitHub Flow</strong></td>
+          <td>Solo <code>main</code> + branch feature. Si fa PR e si mergia direttamente su main.</td>
+          <td>Web app con deploy continuo</td>
+          <td><span class="badge-sm badge-green">Bassa</span></td>
+        </tr>
+        <tr>
+          <td><strong>Git Flow</strong></td>
+          <td><code>main</code>, <code>develop</code>, <code>feature/*</code>, <code>release/*</code>, <code>hotfix/*</code></td>
+          <td>Software con release versionate</td>
+          <td><span class="badge-sm badge-orange">Alta</span></td>
+        </tr>
+        <tr>
+          <td><strong>Trunk-based</strong></td>
+          <td>Branch cortissimi (max 1-2 giorni), merge frequenti su <code>main</code>.</td>
+          <td>Team maturi con alta copertura test</td>
+          <td><span class="badge-sm badge-blue">Media</span></td>
+        </tr>
+        <tr>
+          <td><strong>Forking Flow</strong></td>
+          <td>Ogni sviluppatore ha un fork personale. I branch vengono aperti lì.</td>
+          <td>Open source / contributori esterni</td>
+          <td><span class="badge-sm badge-purple">Media</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       SEZIONE 3 — FORK
+  ═══════════════════════════════════════════════ -->
+  <div class="section section-fork" id="fork">
+    <div class="section-intro">
+      <h2><span class="num num-purple">3</span> Fork</h2>
+      <p>Un <strong>fork</strong> è una copia completa e indipendente di un repository, creata nel proprio account GitHub. Il fork mantiene un legame con il repository originale (detto <em>upstream</em>), permettendo di sincronizzare i cambiamenti, ma lo sviluppo avviene su una copia separata. È il meccanismo alla base di tutta la collaborazione open source.</p>
+    </div>
+
+    <!-- Diagramma fork -->
+    <div class="diagram-wrapper" id="fork-usecases">
+      <svg viewBox="0 0 700 280" xmlns="http://www.w3.org/2000/svg" style="max-width:680px;width:100%">
+        <defs>
+          <marker id="arrfk" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#8250df"/>
+          </marker>
+          <marker id="arrpr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#1a7f37"/>
+          </marker>
+          <marker id="arrsync" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#bc4c00"/>
+          </marker>
+        </defs>
+
+        <!-- Upstream (originale) -->
+        <rect x="240" y="20" width="220" height="80" rx="10" fill="#f3eeff" stroke="#8250df" stroke-width="2"/>
+        <text x="350" y="52" text-anchor="middle" font-size="13" font-weight="700" fill="#6639ba">🏠 Repo Originale</text>
+        <text x="350" y="70" text-anchor="middle" font-size="11" fill="#424a53">upstream / owner</text>
+        <text x="350" y="86" text-anchor="middle" font-size="10" fill="#8c959f">github.com/owner/progetto</text>
+
+        <!-- Fork Utente A -->
+        <rect x="30" y="170" width="200" height="80" rx="10" fill="#dbeafe" stroke="#0969da" stroke-width="1.5"/>
+        <text x="130" y="202" text-anchor="middle" font-size="12" font-weight="700" fill="#0550ae">🍴 Fork di Alice</text>
+        <text x="130" y="220" text-anchor="middle" font-size="10" fill="#424a53">github.com/alice/progetto</text>
+        <text x="130" y="236" text-anchor="middle" font-size="10" fill="#8c959f">copia autonoma</text>
+
+        <!-- Fork Utente B -->
+        <rect x="470" y="170" width="200" height="80" rx="10" fill="#dbeafe" stroke="#0969da" stroke-width="1.5"/>
+        <text x="570" y="202" text-anchor="middle" font-size="12" font-weight="700" fill="#0550ae">🍴 Fork di Bob</text>
+        <text x="570" y="220" text-anchor="middle" font-size="10" fill="#424a53">github.com/bob/progetto</text>
+        <text x="570" y="236" text-anchor="middle" font-size="10" fill="#8c959f">copia autonoma</text>
+
+        <!-- Freccia fork A — arco ampio verso sinistra di Alice -->
+        <path d="M 262 100 Q 110 118 52 168" stroke="#8250df" stroke-width="1.8" fill="none" marker-end="url(#arrfk)"/>
+        <text x="138" y="107" font-size="10" fill="#8250df">fork</text>
+
+        <!-- Freccia fork B -->
+        <path d="M 438 100 Q 518 135 538 168" stroke="#8250df" stroke-width="1.8" fill="none" marker-end="url(#arrfk)"/>
+        <text x="503" y="128" font-size="10" fill="#8250df" transform="rotate(30,503,128)">fork</text>
+
+        <!-- Freccia PR da A — da destra di Alice verso il fondo del repo -->
+        <path d="M 210 168 Q 252 115 258 102" stroke="#1a7f37" stroke-width="1.8" fill="none" stroke-dasharray="5 3" marker-end="url(#arrpr)"/>
+        <text x="266" y="130" font-size="10" fill="#1a7f37" text-anchor="start">Pull Request</text>
+
+        <!-- Freccia sync — dal lato sinistro del repo verso il centro di Alice -->
+        <path d="M 240 72 Q 155 108 148 168" stroke="#bc4c00" stroke-width="1.5" fill="none" stroke-dasharray="3 3" marker-end="url(#arrsync)"/>
+        <text x="170" y="122" font-size="9" fill="#bc4c00" text-anchor="middle">sync</text>
+      </svg>
+      <figcaption>Alice e Bob eseguono un fork del repository originale, lavorano sulle proprie copie e possono proporre modifiche tramite Pull Request. La sincronizzazione (fetch upstream) mantiene i fork aggiornati.</figcaption>
+    </div>
+
+    <h3>Casi d'uso ottimali</h3>
+    <div class="usecase-grid">
+      <div class="usecase-card">
+        <div class="uc-icon">🌍</div>
+        <h4>Contribuire all'open source</h4>
+        <p>Il modo standard per proporre modifiche a progetti pubblici senza avere write access.</p>
+      </div>
+      <div class="usecase-card">
+        <div class="uc-icon">🔬</div>
+        <h4>Sperimentazione libera</h4>
+        <p>Provare modifiche radicali all'architettura senza rischiare di rompere nulla sull'originale.</p>
+      </div>
+      <div class="usecase-card">
+        <div class="uc-icon">📚</div>
+        <h4>Apprendimento da codice altrui</h4>
+        <p>Forkare un progetto interessante per studiarlo, modificarlo e vedere gli effetti.</p>
+      </div>
+      <div class="usecase-card">
+        <div class="uc-icon">🛠️</div>
+        <h4>Mantenere una variante</h4>
+        <p>Creare e mantenere una versione personalizzata di un software (es. tema con le modifiche del proprio brand).</p>
+      </div>
+      <div class="usecase-card">
+        <div class="uc-icon">🏛️</div>
+        <h4>Archivio personale</h4>
+        <p>Salvare una copia di un progetto che potrebbe essere rimosso o reso privato.</p>
+      </div>
+      <div class="usecase-card">
+        <div class="uc-icon">👥</div>
+        <h4>Community aperte</h4>
+        <p>Migliaia di contributori possono lavorare in parallelo senza coordinarsi anticipatamente.</p>
+      </div>
+    </div>
+
+    <div class="procon-grid" id="fork-procon">
+      <div class="procon-card pro">
+        <div class="procon-title">✔ Pro</div>
+        <ul>
+          <li>Non serve alcun permesso sul repository originale</li>
+          <li>Massimo isolamento: i cambiamenti non impattano l'upstream</li>
+          <li>Ideale per community aperte con molti contributori anonimi</li>
+          <li>Il proprietario dell'upstream mantiene il pieno controllo</li>
+          <li>Permette di mantenere una variante divergente a lungo termine</li>
+          <li>Punto di partenza per imparare da codice reale in modo sicuro</li>
+        </ul>
+      </div>
+      <div class="procon-card con">
+        <div class="procon-title">✘ Contro</div>
+        <ul>
+          <li>Processo più lungo: fork → branch → PR → review → merge</li>
+          <li>Il fork può divergere molto dal progetto originale nel tempo</li>
+          <li>Sincronizzazione (fetch upstream) manuale e soggetta a conflitti</li>
+          <li>Non adatto per team interni dove si ha già accesso</li>
+          <li>Un fork abbandonato può creare confusione su quale sia il progetto "vero"</li>
+          <li>Issues e Projects del fork non sono collegati all'upstream</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Sincronizzazione fork -->
+    <h3>Sincronizzare il fork con l'upstream</h3>
+
+    <div class="method-tabs" id="tabs-fork">
+      <div class="tab-bar">
+        <button class="tab-btn active" data-tab="fork-web">
+          <span class="tb-icon">🌐</span> GitHub Web
+        </button>
+        <button class="tab-btn" data-tab="fork-desktop">
+          <span class="tb-icon">🖥️</span> GitHub Desktop
+        </button>
+      </div>
+
+      <!-- TAB: GitHub Web -->
+      <div class="tab-panel active" id="fork-web">
+        <span class="method-badge web">🌐 GitHub.com — metodo più rapido</span>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num web-step">1</div>
+            <div class="step-body">
+              <h4>Vai alla pagina del tuo fork</h4>
+              <p>Accedi a GitHub e apri il tuo fork (sarà elencato tra i tuoi repository con il simbolo 🍴). Nota che sotto il nome del repository è indicato <em>"forked from owner/progetto"</em>.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num web-step">2</div>
+            <div class="step-body">
+              <h4>Clicca su "Sync fork"</h4>
+              <p>Vicino al selettore del branch trovi il pulsante <em>"Sync fork"</em> con un indicatore del numero di commit di cui sei indietro rispetto all'upstream. Cliccalo per aprire il pannello di sincronizzazione.</p>
+              <div class="ui-path">
+                <span class="ui-btn">⎇ main</span>
+                <span class="ui-sep">·</span>
+                <span class="ui-btn">🔄 Sync fork ▾</span>
+              </div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num web-step">3</div>
+            <div class="step-body">
+              <h4>Conferma l'aggiornamento</h4>
+              <p>Nel pannello che si apre, GitHub mostra quanti commit e quale branch dell'upstream verranno applicati. Clicca <em>"Update branch"</em> per completare la sincronizzazione. Se ci sono conflitti, GitHub ti avvisa e ti chiede di risolverli.</p>
+              <div class="ui-path">
+                <span class="ui-btn">Update branch</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="callout callout-tip" style="margin-top:1rem">
+          <div class="callout-icon">💡</div>
+          <div class="callout-body">
+            <strong>Quando compare il pulsante "Sync fork"?</strong>
+            <p>Il pulsante appare solo quando il repository upstream ha nuovi commit che il tuo fork non ha ancora. Se i due sono allineati, il pulsante non è visibile. Controlla periodicamente, specialmente prima di iniziare un nuovo contributo.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: GitHub Desktop -->
+      <div class="tab-panel" id="fork-desktop">
+        <span class="method-badge desk">🖥️ GitHub Desktop — sincronizzazione locale</span>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num desk-step">1</div>
+            <div class="step-body">
+              <h4>Apri il fork in GitHub Desktop</h4>
+              <p>Se hai già clonato il fork, aprilo da <em>File → Add Local Repository</em> oppure da <em>File → Clone Repository</em> se è la prima volta. Assicurati di essere sul branch <strong>main</strong>.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num desk-step">2</div>
+            <div class="step-body">
+              <h4>Aggiorna il fork tramite "Branch → Merge into current branch…"</h4>
+              <p>GitHub Desktop rileva automaticamente il repository upstream. Dal menu in alto scegli <em>Branch</em> → <em>Merge into current branch…</em>. Nella finestra che si apre, seleziona <strong>upstream/main</strong> (o il branch principale dell'upstream) e clicca <em>"Merge upstream/main into main"</em>.</p>
+              <div class="ui-path">
+                <span class="ui-btn">Branch</span>
+                <span class="ui-sep">→</span>
+                <span class="ui-btn">Merge into current branch…</span>
+                <span class="ui-sep">→</span>
+                <span class="ui-btn">upstream/main</span>
+                <span class="ui-sep">→</span>
+                <span class="ui-btn">Merge</span>
+              </div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num desk-step">3</div>
+            <div class="step-body">
+              <h4>Pubblica i nuovi commit sul fork remoto</h4>
+              <p>Dopo il merge locale, clicca <em>"Push origin"</em> nella toolbar per aggiornare anche il tuo fork su GitHub.com.</p>
+              <div class="ui-path">
+                <span class="ui-btn" style="background:#0969da;color:#fff;border-color:#0969da">Push origin</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="cli-note">
+          <strong>Alternativa da terminale (solo per riferimento):</strong>
+          <code>git fetch upstream</code> → <code>git merge upstream/main</code> → <code>git push origin main</code>.
+          GitHub Desktop esegue gli stessi passaggi internamente.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       SEZIONE 4 — FORK: CONTRIBUTO VS PERSONALE
+  ═══════════════════════════════════════════════ -->
+  <div class="section section-fork2" id="fork-tipi">
+    <div class="section-intro">
+      <h2><span class="num num-orange">4</span> Fork per Contribuire vs Fork Personale</h2>
+      <p>L'operazione tecnica di fork è identica in entrambi i casi, ma l'<strong>intenzione</strong>, il <strong>ciclo di vita</strong> e la <strong>gestione</strong> del fork cambiano radicalmente a seconda dello scopo. Comprendere questa differenza evita confusione e pratiche sbagliate.</p>
+    </div>
+
+    <div class="fork-compare">
+      <!-- Fork per contribuire -->
+      <div class="fork-box contrib">
+        <div class="fork-box-header">
+          <div class="ficon">🤝</div>
+          <h4>Fork per Contribuire</h4>
+        </div>
+        <ul>
+          <li>L'obiettivo finale è proporre modifiche al progetto originale tramite una <strong>Pull Request</strong></li>
+          <li>Il fork deve <strong>rimanere sincronizzato</strong> con l'upstream il più possibile</li>
+          <li>Si creano branch tematici (<code>fix/bug-123</code>) per ogni contributo, poi si elimina il branch dopo il merge</li>
+          <li>Le modifiche sono pensate per essere <strong>accettate dalla community</strong> del progetto originale</li>
+          <li>Il fork di solito è <strong>temporaneo</strong> o viene mantenuto solo come base di lavoro</li>
+          <li>Le issue e le discussioni avvengono sul <strong>repository upstream</strong>, non sul fork</li>
+          <li>Il fork non dovrebbe avere una propria README o documentazione divergente</li>
+        </ul>
+      </div>
+
+      <!-- Fork personale -->
+      <div class="fork-box personal">
+        <div class="fork-box-header">
+          <div class="ficon">🧩</div>
+          <h4>Fork Personale / Variante</h4>
+        </div>
+        <ul>
+          <li>L'obiettivo è creare una <strong>versione modificata</strong> per uso proprio, senza intenzione di contribuire all'upstream</li>
+          <li>La sincronizzazione con l'upstream è <strong>opzionale e selettiva</strong> (solo bugfix, non feature)</li>
+          <li>Si lavora direttamente su <code>main</code> o su branch propri, senza preoccuparsi della compatibilità con l'upstream</li>
+          <li>Le modifiche possono essere <strong>incompatibili</strong> con la visione del progetto originale</li>
+          <li>Il fork diventa un <strong>progetto indipendente</strong> con la propria identità (es. cambiare nome, aggiungere feature specifiche)</li>
+          <li>Issues, wiki e documentazione sono propri del fork</li>
+          <li>Esempio: forkare un tema Jekyll per personalizzarlo per il proprio blog</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Diagramma ciclo di vita -->
+    <div class="diagram-wrapper">
+      <svg viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg" style="max-width:680px;width:100%">
+        <defs>
+          <marker id="ac" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#1a7f37"/>
+          </marker>
+          <marker id="ap" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#8250df"/>
+          </marker>
+        </defs>
+
+        <!-- Titolo colonne -->
+        <rect x="30"  y="10" width="290" height="30" rx="6" fill="#f0fdf4" stroke="#1a7f37"/>
+        <text x="175" y="30" text-anchor="middle" font-size="12" font-weight="700" fill="#116329">🤝 Contributo all'upstream</text>
+
+        <rect x="380" y="10" width="290" height="30" rx="6" fill="#faf5ff" stroke="#8250df"/>
+        <text x="525" y="30" text-anchor="middle" font-size="12" font-weight="700" fill="#6639ba">🧩 Fork Personale</text>
+
+        <!-- Colonna CONTRIBUTO -->
+        <rect x="55"  y="60" width="240" height="36" rx="6" fill="#dcfce7" stroke="#86efac"/>
+        <text x="175" y="83" text-anchor="middle" font-size="11" fill="#116329">Fork del repo upstream</text>
+
+        <line x1="175" y1="96" x2="175" y2="116" stroke="#1a7f37" stroke-width="1.5" marker-end="url(#ac)"/>
+
+        <rect x="55"  y="118" width="240" height="36" rx="6" fill="#dcfce7" stroke="#86efac"/>
+        <text x="175" y="141" text-anchor="middle" font-size="11" fill="#116329">Crea branch <tspan font-family="monospace">fix/feature</tspan></text>
+
+        <line x1="175" y1="154" x2="175" y2="174" stroke="#1a7f37" stroke-width="1.5" marker-end="url(#ac)"/>
+
+        <rect x="55"  y="176" width="240" height="36" rx="6" fill="#dcfce7" stroke="#86efac"/>
+        <text x="175" y="199" text-anchor="middle" font-size="11" fill="#116329">Commit e push sul fork</text>
+
+        <line x1="175" y1="212" x2="175" y2="232" stroke="#1a7f37" stroke-width="1.5" marker-end="url(#ac)"/>
+
+        <rect x="55"  y="234" width="240" height="36" rx="6" fill="#dcfce7" stroke="#86efac"/>
+        <text x="175" y="257" text-anchor="middle" font-size="11" fill="#116329">Apri Pull Request → upstream</text>
+
+        <line x1="175" y1="270" x2="175" y2="288" stroke="#1a7f37" stroke-width="1.5" marker-end="url(#ac)"/>
+        <text x="175" y="300" text-anchor="middle" font-size="11" font-weight="700" fill="#1a7f37">✓ Merge (o rifiuto)</text>
+
+        <!-- Colonna PERSONALE -->
+        <rect x="405" y="60" width="240" height="36" rx="6" fill="#f3eeff" stroke="#c4b5fd"/>
+        <text x="525" y="83" text-anchor="middle" font-size="11" fill="#6639ba">Fork del repo base</text>
+
+        <line x1="525" y1="96" x2="525" y2="116" stroke="#8250df" stroke-width="1.5" marker-end="url(#ap)"/>
+
+        <rect x="405" y="118" width="240" height="36" rx="6" fill="#f3eeff" stroke="#c4b5fd"/>
+        <text x="525" y="141" text-anchor="middle" font-size="11" fill="#6639ba">Modifica direttamente <tspan font-family="monospace">main</tspan></text>
+
+        <line x1="525" y1="154" x2="525" y2="174" stroke="#8250df" stroke-width="1.5" marker-end="url(#ap)"/>
+
+        <rect x="405" y="176" width="240" height="36" rx="6" fill="#f3eeff" stroke="#c4b5fd"/>
+        <text x="525" y="199" text-anchor="middle" font-size="11" fill="#6639ba">Aggiungi feature proprie</text>
+
+        <line x1="525" y1="212" x2="525" y2="232" stroke="#8250df" stroke-width="1.5" marker-end="url(#ap)"/>
+
+        <rect x="405" y="234" width="240" height="36" rx="6" fill="#f3eeff" stroke="#c4b5fd"/>
+        <text x="525" y="257" text-anchor="middle" font-size="11" fill="#6639ba">Sync selettivo dall'upstream</text>
+
+        <line x1="525" y1="270" x2="525" y2="288" stroke="#8250df" stroke-width="1.5" marker-end="url(#ap)"/>
+        <text x="525" y="300" text-anchor="middle" font-size="11" font-weight="700" fill="#8250df">Progetto autonomo ∞</text>
+      </svg>
+      <figcaption>Il ciclo di vita è molto diverso: il fork per contribuire converge verso l'upstream, il fork personale diverge e diventa autonomo.</figcaption>
+    </div>
+
+    <h3>Domande guida per capire quale tipo di fork stai facendo</h3>
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Domanda</th>
+          <th><span class="badge-sm badge-green">Contributo</span></th>
+          <th><span class="badge-sm badge-purple">Personale</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Vuoi che le tue modifiche vengano accettate dall'upstream?</td>
+          <td>✅ Sì, è l'obiettivo</td>
+          <td>❌ Non necessariamente</td>
+        </tr>
+        <tr>
+          <td>Il tuo fork deve rispecchiare l'upstream?</td>
+          <td>✅ Sì, tienilo sincronizzato</td>
+          <td>⚠️ Solo quando serve</td>
+        </tr>
+        <tr>
+          <td>Le tue modifiche rispettano le linee guida del progetto?</td>
+          <td>✅ Obbligatorio (CONTRIBUTING.md)</td>
+          <td>❌ Non importa</td>
+        </tr>
+        <tr>
+          <td>Aprirai una Pull Request?</td>
+          <td>✅ Sì, è il passaggio finale</td>
+          <td>❌ Probabilmente no</td>
+        </tr>
+        <tr>
+          <td>Il fork ha una sua identità/brand propria?</td>
+          <td>❌ No, è solo un tramite</td>
+          <td>✅ Sì, è un prodotto distinto</td>
+        </tr>
+        <tr>
+          <td>Le modifiche sono compatibili con l'upstream?</td>
+          <td>✅ Devono esserlo</td>
+          <td>⚠️ Spesso no</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-purple">
+      <div class="callout-icon">📌</div>
+      <div class="callout-body">
+        <strong>Nota sulla licenza</strong>
+        <p>Quando forki un progetto per uso personale, devi rispettare la licenza del progetto originale. Una licenza MIT permette modifiche e redistribuzione libera; una GPL impone che anche il fork derivato sia open source; una licenza proprietaria potrebbe vietare il fork del codice sorgente. Controlla sempre il file <code>LICENSE</code> prima di usare un fork per scopi commerciali o pubblici.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       SEZIONE 5 — RIEPILOGO
+  ═══════════════════════════════════════════════ -->
+  <div class="section section-summary" id="riepilogo">
+    <div class="section-intro">
+      <h2><span class="num num-teal">5</span> Riepilogo: Quando usare cosa</h2>
+      <p>I tre strumenti non sono alternativi: si usano spesso insieme. Il punto chiave è capire <em>quali diritti di accesso hai</em> e <em>qual è il tuo obiettivo</em>.</p>
+    </div>
+
+    <div class="decision-grid">
+      <div class="decision-card dc-blue">
+        <div class="dc-icon">👥</div>
+        <h4>Usa i Collaboratori</h4>
+        <p>Quando hai un team ristretto e fidato che deve lavorare direttamente sullo stesso repository, specialmente se privato.</p>
+      </div>
+      <div class="decision-card dc-green">
+        <div class="dc-icon">🌿</div>
+        <h4>Usa i Branch</h4>
+        <p>Sempre e comunque, per qualsiasi unità di lavoro: una feature, un fix, un esperimento. Non committare mai direttamente su <code>main</code>.</p>
+      </div>
+      <div class="decision-card dc-purple">
+        <div class="dc-icon">🍴</div>
+        <h4>Usa il Fork</h4>
+        <p>Quando non hai accesso al repository (open source) oppure vuoi una copia completamente indipendente per uso personale o per creare una variante.</p>
+      </div>
+    </div>
+
+    <!-- Tabella comparativa finale -->
+    <h3>Confronto finale</h3>
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Caratteristica</th>
+          <th><span class="badge-sm badge-blue">Collaboratori</span></th>
+          <th><span class="badge-sm badge-green">Branch</span></th>
+          <th><span class="badge-sm badge-purple">Fork</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Serve permesso sull'originale?</strong></td>
+          <td>✅ Sì (admin lo aggiunge)</td>
+          <td>✅ Sì (write access)</td>
+          <td>❌ No</td>
+        </tr>
+        <tr>
+          <td><strong>Dove vive il codice?</strong></td>
+          <td>Stesso repository</td>
+          <td>Stesso repository</td>
+          <td>Repository separato</td>
+        </tr>
+        <tr>
+          <td><strong>Isolamento del lavoro</strong></td>
+          <td>Dipende dai branch usati</td>
+          <td>Alto (branch separato)</td>
+          <td>Massimo (repo separato)</td>
+        </tr>
+        <tr>
+          <td><strong>Complessità di setup</strong></td>
+          <td>Bassa</td>
+          <td>Bassissima</td>
+          <td>Media</td>
+        </tr>
+        <tr>
+          <td><strong>Scalabilità (numero utenti)</strong></td>
+          <td>Piccoli team (≤20)</td>
+          <td>Illimitata</td>
+          <td>Illimitata</td>
+        </tr>
+        <tr>
+          <td><strong>Proposta modifiche all'upstream</strong></td>
+          <td>Diretta (push + PR interna)</td>
+          <td>Pull Request interna</td>
+          <td>Pull Request esterna</td>
+        </tr>
+        <tr>
+          <td><strong>Gestione accesso granulare</strong></td>
+          <td>Ruoli: read/write/admin</td>
+          <td>Branch protection rules</td>
+          <td>Non necessaria</td>
+        </tr>
+        <tr>
+          <td><strong>Rischio sul repository originale</strong></td>
+          <td>Medio (dipende dai permessi)</td>
+          <td>Basso (PR + review)</td>
+          <td>Nullo</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-tip">
+      <div class="callout-icon">🎯</div>
+      <div class="callout-body">
+        <strong>La combo vincente per un progetto scolastico o aziendale</strong>
+        <p>Aggiungi i membri del team come <strong>collaboratori</strong> con write access → ognuno lavora su un <strong>branch</strong> dedicato → propone il merge tramite <strong>Pull Request</strong> → il maintainer fa review e approva. Branch protection su <code>main</code> impedisce push diretti accidentali. Questo schema è usato dalla stragrande maggioranza dei team professionali.</p>
+      </div>
+    </div>
+
+    <a href="index.html" class="back-link">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M7.78 12.53a.75.75 0 0 1-1.06 0L2.47 8.28a.75.75 0 0 1 0-1.06l4.25-4.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042L4.56 7h8.69a.75.75 0 0 1 0 1.5H4.56l3.22 3.22a.75.75 0 0 1 0 1.06Z"/></svg>
+      Torna all'indice
+    </a>
+  </div>
+
+</main>
+
+<script>
+  // ── Tab switching ─────────────────────────────────────────────────
+  document.querySelectorAll('.method-tabs').forEach(tabGroup => {
+    tabGroup.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetId = btn.dataset.tab;
+        // deactivate all buttons and panels in this group
+        tabGroup.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        tabGroup.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        // activate clicked
+        btn.classList.add('active');
+        tabGroup.querySelector('#' + targetId).classList.add('active');
+      });
+    });
+  });
+
+  // ── Scrollspy ─────────────────────────────────────────────────────
+  const sections = document.querySelectorAll('.section[id], h3[id]');
+  const navLinks  = document.querySelectorAll('#sidebar a.nav-link');
+
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.forEach(l => l.classList.remove('active-spy'));
+        const match = document.querySelector(`#sidebar a[href="#${e.target.id}"]`);
+        if (match) match.classList.add('active-spy');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+
+  sections.forEach(s => io.observe(s));
+</script>
+
+</body>
+</html>
